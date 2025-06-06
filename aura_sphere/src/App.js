@@ -44,29 +44,34 @@ function AppRoutes() {
  */
 /* useAuth already imported at top, do not import again. */
 
+/**
+ * AuthCard: Handles sign in/up (email/pass) via live Firebase Auth, tracks errors and loading.
+ */
 // PUBLIC_INTERFACE
 function AuthCard() {
   const [mode, setMode] = useState("login"); // 'login' | 'signup'
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [formLoading, setFormLoading] = useState(false);
+
   const { login, signup } = useAuth();
 
+  // Async submit with Firebase Auth; disables buttons and shows errors via err
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setFormLoading(true);
     setErr("");
     if (!email || !password) {
       setErr("Please enter both email and password.");
-      setLoading(false);
+      setFormLoading(false);
       return;
     }
     const fn = mode === "login" ? login : signup;
     const res = await fn(email.trim(), password);
-    setLoading(false);
+    setFormLoading(false);
     if (res && res.ok) {
-      // AuthRedirect handled in parent as app state.
+      // Auth redirect happens via useAuth in parent; no-op here
     } else {
       setErr((res && res.error) || "Unknown error, please try again.");
     }
@@ -78,6 +83,7 @@ function AuthCard() {
       border border-violet-900/40 fadein-auth shadow-fuchsia-900/30 transition-all duration-700"
       style={{ animation: "fadeInAuthPanel 0.68s" }}
       tabIndex={-1}
+      aria-live="polite"
     >
       {/* Brand */}
       <div className="flex flex-row items-center gap-2 mb-3">
@@ -100,6 +106,7 @@ function AuthCard() {
           ${mode === "login" ? "bg-gradient-to-r from-violet-900/70 to-pink-900/70 text-white shadow" : "text-fuchsia-200 bg-transparent"}
           `}
           aria-pressed={mode === "login"}
+          disabled={formLoading}
         >Sign In</button>
         <button
           onClick={() => { setMode("signup"); setErr(""); }}
@@ -108,11 +115,12 @@ function AuthCard() {
           ${mode === "signup" ? "bg-gradient-to-r from-fuchsia-800/80 to-indigo-900/80 text-white shadow" : "text-violet-200 bg-transparent"}
           `}
           aria-pressed={mode === "signup"}
+          disabled={formLoading}
         >Sign Up</button>
       </div>
-      {/* Error */}
+      {/* Error message */}
       {err && (
-        <div className="mb-4 py-2 px-3 rounded bg-pink-950/70 text-pink-200 font-semibold text-[1.04rem] animate-shake">
+        <div className="mb-4 py-2 px-3 rounded bg-pink-950/70 text-pink-200 font-semibold text-[1.04rem] animate-shake" role="alert">
           {err}
         </div>
       )}
@@ -123,7 +131,7 @@ function AuthCard() {
           type="email"
           placeholder="Email"
           value={email}
-          disabled={loading}
+          disabled={formLoading}
           autoFocus
           onChange={e => setEmail(e.target.value)}
           required
@@ -132,19 +140,19 @@ function AuthCard() {
           className="bg-black/70 border border-violet-800 text-white rounded-lg px-4 py-3 text-[1.11rem] outline-none focus:border-pink-400 focus:shadow-md"
           type="password"
           placeholder="Password"
-          minLength={4}
+          minLength={6}
           autoComplete={mode === "login" ? "current-password" : "new-password"}
           value={password}
-          disabled={loading}
+          disabled={formLoading}
           onChange={e => setPassword(e.target.value)}
           required
         />
         <button
           className="rounded-lg bg-gradient-to-r from-fuchsia-700 to-purple-900 py-3 font-extrabold text-white text-lg mt-2 shadow transition-all active:scale-[.98] hover:brightness-110 focus:outline-none"
           type="submit"
-          disabled={loading}
+          disabled={formLoading}
         >
-          {loading
+          {formLoading
             ? (mode === "login" ? "Signing In..." : "Signing Up...")
             : (mode === "login" ? "Sign In" : "Create Account")}
         </button>
@@ -154,14 +162,14 @@ function AuthCard() {
         {mode === "login" ? (
           <span>Don&apos;t have an account?
             <button className="underline text-fuchsia-400 ml-1 font-bold hover:text-fuchsia-200 bg-transparent border-0"
-              type="button" onClick={() => { setMode("signup"); setErr(""); }}>
+              type="button" onClick={() => { setMode("signup"); setErr(""); }} disabled={formLoading}>
               Sign up
             </button>
           </span>
         ) : (
           <span>Already a member?
             <button className="underline text-pink-100 ml-1 font-bold hover:text-fuchsia-200 bg-transparent border-0"
-              type="button" onClick={() => { setMode("login"); setErr(""); }}>
+              type="button" onClick={() => { setMode("login"); setErr(""); }} disabled={formLoading}>
               Sign in
             </button>
           </span>
