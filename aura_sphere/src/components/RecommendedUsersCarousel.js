@@ -22,7 +22,7 @@ function RecommendedUsersCarousel({ users }) {
 
   return (
     <div className="rec-users-carousel">
-      <h3 className="text-lg font-bold text-sky-400 bg-gradient-to-r from-pink-200 via-blue-100 to-purple-100 bg-clip-text text-transparent mb-2 ml-1">
+      <h3 className="text-lg font-bold text-black bg-gradient-to-r from-pink-200 via-gray-200 to-purple-100 bg-clip-text text-transparent mb-2 ml-1">
         Recommended Creators
       </h3>
       <div className="relative">

@@ -18,7 +18,7 @@ function CategoryFilterBar({ categories, selected, onSelect }) {
   return (
     <nav
       ref={scroller}
-      className="flex gap-2 px-1 overflow-x-auto scrollbar-thin scrollbar-thumb-blue-100 scrollbar-track-purple-50 pb-1 select-none no-scrollbar"
+      className="flex gap-2 px-1 overflow-x-auto scrollbar-thin scrollbar-thumb-black scrollbar-track-purple-50 pb-1 select-none no-scrollbar"
       aria-label="Category Filter"
     >
       {categories.map((cat) => (
@@ -30,7 +30,7 @@ function CategoryFilterBar({ categories, selected, onSelect }) {
             " " +
             (cat === selected
               ? "bg-gradient-to-r from-fuchsia-300 to-pink-200 text-indigo-900 shadow-md scale-105"
-              : "bg-gradient-to-r from-pink-50 via-blue-50 to-violet-100 text-blue-700 hover:scale-102")
+              : "bg-gradient-to-r from-pink-50 via-gray-200 to-violet-100 text-black hover:scale-102")
           }
           aria-pressed={cat === selected}
           style={{ boxShadow: cat === selected ? "0 2px 16px #e0a4ff44" : "0 2px 6px #eed2ff0c" }}
