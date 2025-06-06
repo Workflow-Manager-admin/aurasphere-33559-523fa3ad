@@ -120,8 +120,7 @@ function AuthPage() {
               background: mode === "login" ? "linear-gradient(98deg, #5528b8 0%, #df83fe 80%)" : "transparent",
               border: "none",
               outline: "none",
-              cursor: "pointer",
-              transition: "all 0.19s"
+              cursor: "pointer"
             }}
             aria-pressed={mode === "login"}
             tabIndex={0}
@@ -138,8 +137,7 @@ function AuthPage() {
               background: mode === "signup" ? "linear-gradient(94deg, #e087fb 10%, #5b46a5 100%)" : "transparent",
               border: "none",
               outline: "none",
-              cursor: "pointer",
-              transition: "all 0.19s"
+              cursor: "pointer"
             }}
             aria-pressed={mode === "signup"}
             tabIndex={0}
