@@ -146,7 +146,6 @@ function HomePage() {
           <StoriesCarousel
             stories={stories}
             onStoryClick={(idx) => setStoryModal({ open: true, storyIdx: idx })}
-            darkMode={darkMode}
           />
         </div>
       </section>
@@ -158,7 +157,6 @@ function HomePage() {
               key={post.id}
               post={post}
               onLike={() => handleLike(post.id)}
-              darkMode={darkMode}
             />
           ))}
           {loading && (
@@ -170,13 +168,6 @@ function HomePage() {
       </div>
       <aside className="explore-recommendations">
         <ExploreRecommendations />
-        <button
-          aria-label="Toggle dark mode"
-          className="darkmode-toggle aura-gradient-btn"
-          onClick={() => setDarkMode((m) => (m === "dark" ? "light" : "dark"))}
-        >
-          {darkMode === "dark" ? "🌙 Dark Mode" : "🔆 Light Mode"}
-        </button>
       </aside>
       {storyModal.open && (
         <StoryModal
