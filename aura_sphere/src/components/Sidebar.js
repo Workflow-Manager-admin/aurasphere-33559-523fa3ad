@@ -101,30 +101,29 @@ function Sidebar() {
         }
         .sidebar-brand {
           font-family: 'Times New Roman', Times, serif;
-          font-size: 2.12rem;
+          font-size: 2.5rem;
           font-weight: 900;
-          color: #fff; /* base white */
-          letter-spacing: 2px;
-          margin-left: 18px;
-          margin-bottom: 24px;
+          color: #fff;
+          letter-spacing: 2.5px;
+          margin-left: 14px;
+          margin-bottom: 28px;
           cursor: pointer;
-          border-radius: 12px;
-          line-height: 1.2;
-          padding: 4px 20px 4px 0;
-          transition: color 0.18s, background 0.18s, filter 0.19s;
+          border-radius: 16px;
+          line-height: 1.09;
+          padding: 5px 32px 7px 0;
+          transition: color 0.23s cubic-bezier(.53,0,.53,1), background 0.18s cubic-bezier(.49,.03,.61,1), filter 0.20s;
           box-sizing: border-box;
           background: none;
           outline: none;
           text-shadow:
-            0 2px 8px #cdaaff31,
-            0 1.5px 1.5px #29004814;
-          /* Subtle glowing effect */
+            0 4px 18px #c580ff29,
+            0 2.5px 2.5px #39005818;
         }
         .sidebar-brand:focus,
         .sidebar-brand:hover {
           color: #e087fb;
-          background: rgba(51,19,90,0.09);
-          filter: drop-shadow(0 0 15px #db9ffd78);
+          background: rgba(51,19,90,0.13);
+          filter: drop-shadow(0 0 25px #db9ffd8A);
           outline: none;
         }
         .sidebar-links {
