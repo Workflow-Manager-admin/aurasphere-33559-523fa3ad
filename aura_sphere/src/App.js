@@ -130,38 +130,57 @@ function AuthCard() {
       {/* Toggle bar */}
       <div className="flex mb-6 border bg-gradient-to-r from-zinc-800/30 to-violet-900/10 rounded-lg overflow-hidden">
         <button
-          onClick={() => { setMode("login"); setErr(""); }}
+          onClick={() => { setMode("login"); setErr(""); setSuccess(""); }}
           type="button"
           className={`flex-1 py-2 font-bold text-base transition-all
           ${mode === "login" ? "bg-gradient-to-r from-violet-900/70 to-pink-900/70 text-white shadow" : "text-fuchsia-200 bg-transparent"}
           `}
           aria-pressed={mode === "login"}
-          disabled={formLoading}
+          disabled={formLoading || isFormDisabled}
         >Sign In</button>
         <button
-          onClick={() => { setMode("signup"); setErr(""); }}
+          onClick={() => { setMode("signup"); setErr(""); setSuccess(""); }}
           type="button"
           className={`flex-1 py-2 font-bold text-base transition-all
           ${mode === "signup" ? "bg-gradient-to-r from-fuchsia-800/80 to-indigo-900/80 text-white shadow" : "text-violet-200 bg-transparent"}
           `}
           aria-pressed={mode === "signup"}
-          disabled={formLoading}
+          disabled={formLoading || isFormDisabled}
         >Sign Up</button>
       </div>
-      {/* Error message */}
+      {/* Error/success message */}
       {err && (
-        <div className="mb-4 py-2 px-3 rounded bg-pink-950/70 text-pink-200 font-semibold text-[1.04rem] animate-shake" role="alert">
+        <div
+          className="mb-4 py-2 px-3 rounded bg-pink-950/70 text-pink-200 font-semibold text-[1.04rem] animate-shake"
+          role="alert"
+          aria-live="assertive"
+        >
           {err}
         </div>
       )}
+      {success && (
+        <div
+          className="mb-4 py-2 px-3 rounded bg-fuchsia-900/60 text-fuchsia-100 font-semibold text-[1.09rem] animate-fadesuccess shadow"
+          role="status"
+          aria-live="polite"
+        >
+          {success}
+        </div>
+      )}
       {/* Form */}
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit} autoComplete="on" spellCheck={false}>
+      <form
+        className="flex flex-col gap-4"
+        onSubmit={handleSubmit}
+        autoComplete="on"
+        spellCheck={false}
+        aria-disabled={isFormDisabled}
+      >
         <input
           className="bg-black/80 border border-violet-700 text-white rounded-lg px-4 py-3 text-[1.07rem] outline-none focus:border-pink-400 focus:shadow-md"
           type="email"
           placeholder="Email"
           value={email}
-          disabled={formLoading}
+          disabled={isFormDisabled}
           autoFocus
           onChange={e => setEmail(e.target.value)}
           required
@@ -173,14 +192,14 @@ function AuthCard() {
           minLength={6}
           autoComplete={mode === "login" ? "current-password" : "new-password"}
           value={password}
-          disabled={formLoading}
+          disabled={isFormDisabled}
           onChange={e => setPassword(e.target.value)}
           required
         />
         <button
           className="rounded-lg bg-gradient-to-r from-fuchsia-700 to-purple-900 py-3 font-extrabold text-white text-lg mt-2 shadow transition-all active:scale-[.98] hover:brightness-110 focus:outline-none"
           type="submit"
-          disabled={formLoading}
+          disabled={isFormDisabled}
         >
           {formLoading
             ? (mode === "login" ? "Signing In..." : "Signing Up...")
