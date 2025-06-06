@@ -210,15 +210,27 @@ function AuthCard() {
       <div className="mt-5 text-center text-zinc-300">
         {mode === "login" ? (
           <span>Don&apos;t have an account?
-            <button className="underline text-fuchsia-400 ml-1 font-bold hover:text-fuchsia-200 bg-transparent border-0"
-              type="button" onClick={() => { setMode("signup"); setErr(""); }} disabled={formLoading}>
+            <button
+              className="underline text-fuchsia-400 ml-1 font-bold hover:text-fuchsia-200 bg-transparent border-0"
+              type="button"
+              onClick={() => { setMode("signup"); setErr(""); setSuccess(""); }}
+              disabled={formLoading || isFormDisabled}
+              aria-disabled={formLoading || isFormDisabled}
+              tabIndex={formLoading || isFormDisabled ? -1 : 0}
+            >
               Sign up
             </button>
           </span>
         ) : (
           <span>Already a member?
-            <button className="underline text-pink-100 ml-1 font-bold hover:text-fuchsia-200 bg-transparent border-0"
-              type="button" onClick={() => { setMode("login"); setErr(""); }} disabled={formLoading}>
+            <button
+              className="underline text-pink-100 ml-1 font-bold hover:text-fuchsia-200 bg-transparent border-0"
+              type="button"
+              onClick={() => { setMode("login"); setErr(""); setSuccess(""); }}
+              disabled={formLoading || isFormDisabled}
+              aria-disabled={formLoading || isFormDisabled}
+              tabIndex={formLoading || isFormDisabled ? -1 : 0}
+            >
               Sign in
             </button>
           </span>
@@ -230,6 +242,8 @@ function AuthCard() {
         .fadein-auth { animation: fadeInAuthPanel 0.68s cubic-bezier(.34,0,.36,1); }
         @keyframes shake { 0%{transform:translateX(0);} 28%{transform:translateX(-7px);} 55%{transform:translateX(4px);} 75%{transform:translateX(-2px);} 100%{transform:translateX(0);} }
         .animate-shake { animation: shake 0.33s cubic-bezier(.60,0,.50,1); }
+        @keyframes fadesuccess { 0%{opacity:0;} 50%{opacity:.6;} 89%{opacity:.95;} 100%{opacity:1;} }
+        .animate-fadesuccess { animation: fadesuccess 0.64s cubic-bezier(.71,0,.29,1); }
       `}</style>
     </div>
   );
