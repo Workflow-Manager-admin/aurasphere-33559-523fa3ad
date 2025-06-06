@@ -8,7 +8,8 @@
 
 body {
   margin: 0;
-  font-family: 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  /* Set Times New Roman as default site-wide font, fall back to other serif then sans-serif */
+  font-family: 'Times New Roman', Times, serif;
   background-color: var(--base-dark);
   color: var(--text-color);
   -webkit-font-smoothing: antialiased;
