@@ -13,23 +13,24 @@ import { NotificationsPage } from './features/Notifications';
 import { AuthPage } from './features/Auth';
 import { MediaUploadPage } from './features/MediaUpload';
 
+import Navbar from './components/Navbar';
+import Sidebar from './components/Sidebar';
+
 function App() {
   return (
     <BrowserRouter>
-      <div className="app">
-        <nav className="navbar">
-          <div className="container">
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-              <div className="logo">
-                <span className="logo-symbol">*</span> KAVIA AI
-              </div>
-              <button className="btn">Template Button</button>
-            </div>
-          </div>
-        </nav>
-
-        <main>
-          <div className="container">
+      <div className="app" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <Navbar />
+        <div className="main-layout" style={{ display: 'flex', flex: 1, paddingTop: 64 }}>
+          {/* Sidebar visible on desktop only */}
+          <Sidebar />
+          <main className="main-content" style={{
+            flex: 1,
+            marginLeft: 200,
+            minHeight: 'calc(100vh - 64px)',
+            padding: '32px 12px 12px 12px',
+            transition: 'margin-left 0.2s'
+          }}>
             <Routes>
               <Route path="/" element={<FeedPage />} />
               <Route path="/feed" element={<FeedPage />} />
@@ -43,8 +44,15 @@ function App() {
               <Route path="/media-upload" element={<MediaUploadPage />} />
               {/* Optionally, add a catch-all NotFound route here */}
             </Routes>
-          </div>
-        </main>
+          </main>
+        </div>
+        {/* Responsive adjustment: hide sidebar and use full width on mobile */}
+        <style>{`
+          @media (max-width: 900px) {
+            .main-layout { flex-direction: column; }
+            .main-content { margin-left: 0 !important; }
+          }
+        `}</style>
       </div>
     </BrowserRouter>
   );
