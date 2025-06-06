@@ -13,21 +13,65 @@ import { NotificationsPage } from './features/Notifications';
 import { AuthPage } from './features/Auth';
 import { MediaUploadPage } from './features/MediaUpload';
 
-import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 
 function App() {
+  // Enforce dark mode on mount
+  React.useEffect(() => {
+    document.body.classList.add('theme-dark');
+    document.body.classList.remove('theme-light');
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem('aura_theme', 'dark');
+    }
+  }, []);
+
   return (
     <BrowserRouter>
       <div className="app" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-        <Navbar />
-        <div className="main-layout" style={{ display: 'flex', flex: 1, paddingTop: 64 }}>
+        {/* Branding - 'MY AURAGRAM' at top left, always visible */}
+        <div
+          style={{
+            height: 56,
+            display: 'flex',
+            alignItems: 'center',
+            background: 'var(--base-dark)',
+            borderBottom: '1px solid var(--border-color)',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            zIndex: 100,
+          }}
+        >
+          <span
+            className="auragram-brand"
+            style={{
+              fontWeight: 900,
+              fontSize: '2.0rem',
+              letterSpacing: '2.5px',
+              color: '#fff',
+              marginLeft: 32,
+              cursor: 'pointer',
+              transition: 'color 0.18s, background 0.18s',
+              padding: '2px 18px 2px 0',
+              borderRadius: 8
+            }}
+            tabIndex={0}
+            onMouseOver={e => { e.currentTarget.style.color = '#e087fb'; e.currentTarget.style.background = 'rgba(51,19,90,0.13)'; }}
+            onFocus={e => { e.currentTarget.style.color = '#e087fb'; e.currentTarget.style.background = 'rgba(51,19,90,0.13)'; }}
+            onMouseOut={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.background = 'transparent'; }}
+            onBlur={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.background = 'transparent'; }}
+          >
+            MY AURAGRAM
+          </span>
+        </div>
+        <div className="main-layout" style={{ display: 'flex', flex: 1, paddingTop: 56 }}>
           {/* Sidebar visible on desktop only */}
           <Sidebar />
           <main className="main-content" style={{
             flex: 1,
             marginLeft: 200,
-            minHeight: 'calc(100vh - 64px)',
+            minHeight: 'calc(100vh - 56px)',
             padding: '32px 12px 12px 12px',
             transition: 'margin-left 0.2s'
           }}>
@@ -36,7 +80,7 @@ function App() {
               <Route path="/feed" element={<FeedPage />} />
               <Route path="/explore" element={<ExplorePage />} />
               <Route path="/profile" element={<ProfilePage />} />
-              {/* <Route path="/stories" element={<StoriesPage />} /> */} {/* Stories navigation removed */}
+              {/* <Route path="/stories" element={<StoriesPage />} /> */}
               <Route path="/messaging" element={<MessagingPage />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/notifications" element={<NotificationsPage />} />
@@ -48,6 +92,10 @@ function App() {
         </div>
         {/* Responsive adjustment: hide sidebar and use full width on mobile */}
         <style>{`
+          .auragram-brand:focus, .auragram-brand:hover {
+            color: #e087fb !important;
+            background: rgba(51,19,90,0.13) !important;
+          }
           @media (max-width: 900px) {
             .main-layout { flex-direction: column; }
             .main-content { margin-left: 0 !important; }
