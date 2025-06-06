@@ -67,6 +67,7 @@ function App() {
             MY AURAGRAM
           </span>
         </div>
+        {/* No Navbar rendered; top navigation bar fully removed */}
         <div className="main-layout" style={{ display: 'flex', flex: 1, paddingTop: 56 }}>
           {/* Sidebar visible on desktop only */}
           <Sidebar />
