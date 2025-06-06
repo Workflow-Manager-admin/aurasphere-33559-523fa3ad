@@ -47,21 +47,41 @@ function AppRoutes() {
 /**
  * AuthCard: Handles sign in/up (email/pass) via live Firebase Auth, tracks errors and loading.
  */
+/**
+ * AuthCard: Handles sign in/up (email/pass) via live Firebase Auth, tracks errors and loading.
+ * Also listens for successful authentication state (for instant redirect/feedback) from context.
+ */
 // PUBLIC_INTERFACE
 function AuthCard() {
-  const [mode, setMode] = useState("login"); // 'login' | 'signup'
+  const [mode, setMode] = useState("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
+  const [success, setSuccess] = useState("");
   const [formLoading, setFormLoading] = useState(false);
 
-  const { login, signup } = useAuth();
+  const { login, signup, isAuthenticated, loading: authLoading } = useAuth();
 
-  // Async submit with Firebase Auth; disables buttons and shows errors via err
+  // Show success animation/state and clear error immediately when auth state becomes true
+  useEffect(() => {
+    if (isAuthenticated) {
+      setSuccess(
+        mode === "signup"
+          ? "Sign up successful! Redirecting to your aura space..."
+          : "Login successful! Redirecting..."
+      );
+      setErr("");
+    } else {
+      setSuccess("");
+    }
+  }, [isAuthenticated, mode]);
+
+  // Live submit handler: calls Firebase login or signup, handles errors, disables UI
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormLoading(true);
     setErr("");
+    setSuccess("");
     if (!email || !password) {
       setErr("Please enter both email and password.");
       setFormLoading(false);
@@ -71,11 +91,21 @@ function AuthCard() {
     const res = await fn(email.trim(), password);
     setFormLoading(false);
     if (res && res.ok) {
-      // Auth redirect happens via useAuth in parent; no-op here
+      // Success: Firebase Auth state will route immediately by parent
+      setSuccess(
+        mode === "signup"
+          ? "Sign up successful! Redirecting to your aura space..."
+          : "Login successful! Redirecting..."
+      );
+      setErr("");
     } else {
+      setSuccess("");
       setErr((res && res.error) || "Unknown error, please try again.");
     }
   };
+
+  // Block form interaction after successful auth
+  const isFormDisabled = formLoading || isAuthenticated || authLoading;
 
   return (
     <div
