@@ -339,6 +339,35 @@ function AuthPage() {
         .aura-auth-input::-moz-placeholder { color: #d6bcf7c9; }
         .aura-auth-input:-ms-input-placeholder { color: #d6bcf7c9; }
         .aura-auth-input::placeholder { color: #d6bcf7c9; }
+        /* Remove hover/focus/active for auth toggles: togglebar buttons */
+        .aura-auth-togglebar button,
+        .aura-auth-togglebar button:focus,
+        .aura-auth-togglebar button:active,
+        .aura-auth-togglebar button:hover {
+          background: inherit !important;
+          filter: none !important;
+          outline: none !important;
+          box-shadow: none !important;
+          transition: none !important;
+        }
+        /* Override for the selected toggle to preserve visible state */
+        .aura-auth-togglebar button[aria-pressed="true"] {
+          filter: none !important;
+          outline: none !important;
+        }
+        /* Remove hover effect for hint link buttons (Sign up, Sign in) */
+        .aura-auth-hint button,
+        .aura-auth-hint button:hover,
+        .aura-auth-hint button:focus,
+        .aura-auth-hint button:active {
+          text-decoration: underline;
+          background: none !important;
+          color: inherit;
+          filter: none !important;
+          outline: none !important;
+          box-shadow: none !important;
+          transition: none !important;
+        }
         @media (max-width: 600px) {
           .aura-auth-card { min-width: 96vw !important; max-width: 96vw !important; padding: 27px 7vw 22px 7vw;}
         }
