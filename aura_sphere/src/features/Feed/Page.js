@@ -125,15 +125,35 @@ function HomePage() {
 
   return (
     <div className="aura-homepage">
-      <div className="main-feed">
-        {/* Stories Carousel - separated, centered, full width, strong visual boundary */}
-        <div className="stories-carousel-wrap">
+      {/* --- Stories (Centered, Full-Width, Separated) --- */}
+      <section
+        className="stories-outer-section"
+        style={{
+          width: "100%",
+          maxWidth: "1100px",
+          marginLeft: "auto",
+          marginRight: "auto",
+          marginTop: "8px",
+          marginBottom: 0,
+          paddingLeft: "0",
+          paddingRight: "0",
+          zIndex: 3,
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <div className="stories-carousel-wrap" style={{ width: "100%" }}>
           <StoriesCarousel
             stories={stories}
             onStoryClick={(idx) => setStoryModal({ open: true, storyIdx: idx })}
             darkMode={darkMode}
           />
         </div>
+      </section>
+
+      <div className="main-feed" style={{ width: "100%", maxWidth: 580 }}>
         <div className="feed-posts-list">
           {posts.map((post) => (
             <PostCard
@@ -160,7 +180,6 @@ function HomePage() {
           {darkMode === "dark" ? "🌙 Dark Mode" : "🔆 Light Mode"}
         </button>
       </aside>
-      {/* Full-Screen Story Modal */}
       {storyModal.open && (
         <StoryModal
           story={stories[storyModal.storyIdx]}
@@ -177,6 +196,7 @@ function HomePage() {
           }
         />
       )}
+      {/* Add clarify separation if needed in the future */}
     </div>
   );
 }
