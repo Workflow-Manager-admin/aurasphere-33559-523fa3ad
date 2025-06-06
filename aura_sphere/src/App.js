@@ -15,6 +15,8 @@ import { MediaUploadPage } from './features/MediaUpload';
 
 import Sidebar from './components/Sidebar';
 
+// Navbar is no longer imported as per requirements.
+
 function App() {
   // Enforce dark mode on mount
   React.useEffect(() => {
