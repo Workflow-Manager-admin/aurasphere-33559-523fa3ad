@@ -126,14 +126,15 @@ function HomePage() {
   return (
     <div className="aura-homepage">
       <div className="main-feed">
-        <section>
+        {/* Stories Carousel - separated, centered, full width, strong visual boundary */}
+        <div className="stories-carousel-wrap">
           <StoriesCarousel
             stories={stories}
             onStoryClick={(idx) => setStoryModal({ open: true, storyIdx: idx })}
             darkMode={darkMode}
           />
-        </section>
-        <section>
+        </div>
+        <div className="feed-posts-list">
           {posts.map((post) => (
             <PostCard
               key={post.id}
@@ -147,7 +148,7 @@ function HomePage() {
               <AuraSpinner />
             </div>
           )}
-        </section>
+        </div>
       </div>
       <aside className="explore-recommendations">
         <ExploreRecommendations />
