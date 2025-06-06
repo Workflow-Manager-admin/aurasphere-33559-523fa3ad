@@ -36,7 +36,7 @@ function App() {
               <Route path="/feed" element={<FeedPage />} />
               <Route path="/explore" element={<ExplorePage />} />
               <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/stories" element={<StoriesPage />} />
+              {/* <Route path="/stories" element={<StoriesPage />} /> */} {/* Stories navigation removed */}
               <Route path="/messaging" element={<MessagingPage />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/notifications" element={<NotificationsPage />} />

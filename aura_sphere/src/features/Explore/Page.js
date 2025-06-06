@@ -21,6 +21,14 @@ const demoUsers = [
 function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
+const userPostImageMap = {
+  Willow: "/assets/post-willow.jpg",
+  Seren: "/assets/post-seren.jpg",
+  Sky: "/assets/post-sky.jpg",
+  Noor: "/assets/post-noor.jpg",
+  Kai: "/assets/post-kai.jpg",
+  Rhea: "/assets/post-rhea.jpg",
+};
 const DEMO_POSTS = Array.from({ length: 25 }, (_, i) => {
   // Assign avatar image for each user post
   const avatarIdx = (i % demoUsers.length) + 1;
@@ -29,14 +37,14 @@ const DEMO_POSTS = Array.from({ length: 25 }, (_, i) => {
     avatar: `/assets/avatar${avatarIdx}.png`,
   };
   const ratio = [3 / 4, 1, 5 / 4][i % 3] + (Math.random() * 0.15 - 0.08);
+  // Use sample post image for user if available
+  const sampleImageSrc = userPostImageMap[u.name] || `https://picsum.photos/seed/explore${i}${i * 37}/400/${Math.round(400 * ratio)}`;
   return {
     id: `explore-${i}`,
     user: u,
     category: CATEGORIES[(i + i % 3) % CATEGORIES.length],
     media: {
-      src: `https://picsum.photos/seed/explore${i}${i * 37}/400/${Math.round(
-        400 * ratio
-      )}`,
+      src: sampleImageSrc,
       type: "image",
       aspect: ratio,
     },

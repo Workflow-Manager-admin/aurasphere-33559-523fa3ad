@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 const SIDEBAR_LINKS = [
   { to: '/feed', label: 'Home', emoji: '🏠' },
   { to: '/explore', label: 'Explore', emoji: '🔍' },
-  { to: '/stories', label: 'Stories', emoji: '📚' },
+  // { to: '/stories', label: 'Stories', emoji: '📚' }, // Removed Stories as navigation option
   { to: '/media-upload', label: 'Upload', emoji: '⬆️' },
   { to: '/profile', label: 'Profile', emoji: '👤' },
   { to: '/admin', label: 'Admin', emoji: '🛠️' }
