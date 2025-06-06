@@ -15,16 +15,30 @@ const users = [
   { id: "7", name: "Rhea", avatar: "/assets/avatar7.png" },
 ];
 const generatePosts = (count = 7) => {
+  // Map of user name to sample post image file name
+  const userPostImageMap = {
+    Willow: "/assets/post-willow.jpg",
+    Seren: "/assets/post-seren.jpg",
+    Siden: "/assets/post-siden.jpg",
+    Sky: "/assets/post-sky.jpg",
+    Noor: "/assets/post-noor.jpg",
+    Kai: "/assets/post-kai.jpg",
+    Rhea: "/assets/post-rhea.jpg",
+  };
   return Array.from({ length: count }, (_, i) => {
     const u = users[i % users.length];
-    const hasVideo = Math.random() > 0.7;
     const ts = Date.now() - randomBetween(60_000, 86400000);
+    let media;
+    // Assign image per user where available, else fallback to picsum
+    if (userPostImageMap[u.name]) {
+      media = { type: "image", src: userPostImageMap[u.name] };
+    } else {
+      media = { type: "image", src: `https://picsum.photos/seed/${i + randomBetween(1, 9999)}/500/600` };
+    }
     return {
       id: `post-${i}`,
       user: u,
-      media: hasVideo
-        ? { type: "video", src: `https://www.w3schools.com/html/mov_bbb.mp4` }
-        : { type: "image", src: `https://picsum.photos/seed/${i + randomBetween(1, 9999)}/500/600` },
+      media,
       likes: randomBetween(10, 1400),
       commentsCount: randomBetween(0, 90),
       caption: [
