@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 
 // Sample/Mock Data for Profile Demo
 const PROFILE_USER = {
@@ -13,7 +13,7 @@ const PROFILE_USER = {
   followers: 21800,
   following: 381,
   posts: 90,
-  isMe: true, // controls edit or follow button display
+  isMe: true // controls edit or follow button display
 };
 
 // Demo highlight stories (use sample images/avatars)
@@ -22,7 +22,7 @@ const HIGHLIGHTS = [
   { id: 2, label: "Vibes", img: "/assets/post-willow.jpg" },
   { id: 3, label: "Sky", img: "/assets/post-sky.jpg" },
   { id: 4, label: "Pets", img: "/assets/avatar5.png" },
-  { id: 5, label: "Art", img: "/assets/post-seren.jpg" },
+  { id: 5, label: "Art", img: "/assets/post-seren.jpg" }
 ];
 
 const userPostImages = [
@@ -32,7 +32,7 @@ const userPostImages = [
   "/assets/post-seren.jpg",
   "/assets/post-noor.jpg",
   "/assets/post-rhea.jpg",
-  "/assets/post-sky.jpg",
+  "/assets/post-sky.jpg"
 ];
 
 // Dummy data for posts, reels, tagged
@@ -45,7 +45,7 @@ function makePost(i) {
     likes: 2000 + i * 19,
     caption: `Aura ${i} - Energy in color!`,
     location: i % 4 === 1 ? "Venice Beach" : undefined,
-    aspect: [1, 1, 0.7, 1.2][i % 4],
+    aspect: [1, 1, 0.7, 1.2][i % 4]
   };
 }
 function makeReel(i) {
@@ -56,7 +56,7 @@ function makeReel(i) {
     type: "video",
     likes: 1200 + i * 22,
     caption: `Reel #${i} - Dancing Light 🎶`,
-    aspect: [0.6, 1, 0.9][i % 3],
+    aspect: [0.6, 1, 0.9][i % 3]
   };
 }
 function makeTagged(i) {
@@ -65,7 +65,7 @@ function makeTagged(i) {
     image: userPostImages[(i + 2) % userPostImages.length],
     type: "image",
     caption: `Tagged Moment #${i}`,
-    aspect: [1, 1, 0.8][i % 3],
+    aspect: [1, 1, 0.8][i % 3]
   };
 }
 const DEMO_POSTS = Array.from({ length: 16 }, (_, i) => makePost(i));
@@ -76,15 +76,15 @@ const DEMO_TAGGED = Array.from({ length: 7 }, (_, i) => makeTagged(i));
 const PROFILE_TABS = [
   { key: "grid", label: "Posts", icon: GridIcon },
   { key: "reels", label: "Reels", icon: ReelsIcon },
-  { key: "tagged", label: "Tagged", icon: TaggedIcon },
+  { key: "tagged", label: "Tagged", icon: TaggedIcon }
 ];
 
 // --- COMPONENTS ---
 
 // PUBLIC_INTERFACE
 function ProfilePage() {
-  // Theme: Always dark mode, all toggles and localStorage code removed.
-  React.useEffect(() => {
+  // Always enforce dark mode, remove toggle state/UI
+  useEffect(() => {
     document.body.classList.add("theme-dark");
     document.body.classList.remove("theme-light");
     if (typeof localStorage !== "undefined") {
@@ -168,10 +168,9 @@ function ProfilePage() {
 // PUBLIC_INTERFACE
 function ProfileHeader({
   user,
-  darkMode,
   isMe,
   following,
-  setFollowing,
+  setFollowing
 }) {
   return (
     <div className="profile-header-section flex flex-col items-center sm:flex-row sm:items-start gap-3 min-w-[164px]">
@@ -182,7 +181,7 @@ function ProfileHeader({
           style={{
             boxShadow: "0 1px 28px #d3a6ff55",
             width: 118,
-            height: 118,
+            height: 118
           }}
         >
           <img
@@ -280,7 +279,7 @@ function ProfileActionButton({ isMe, following, setFollowing }) {
       style={{
         fontWeight: 700,
         fontSize: "1rem",
-        boxShadow: "0 0.5px 18px #d6b6ff22",
+        boxShadow: "0 0.5px 18px #d6b6ff22"
       }}
       onClick={handleFollow}
     >
@@ -372,7 +371,7 @@ function ProfileTabs({ tabs, activeTab, onChange }) {
 }
 
 // PUBLIC_INTERFACE
-function ProfileTabContents({ tab, posts, reels, tagged, darkMode }) {
+function ProfileTabContents({ tab, posts, reels, tagged }) {
   if (tab === "grid")
     return <PostGrid posts={posts} />;
   if (tab === "reels")
@@ -425,7 +424,7 @@ function ReelsGrid({ reels }) {
           className="relative group aspect-[9/16] sm:aspect-[12/17] rounded-2xl overflow-hidden bg-gradient-to-br from-violet-100 to-pink-100 shadow hover:scale-105 transition-transform cursor-pointer"
           style={{
             minHeight: 100,
-            background: "linear-gradient(120deg,#ddf2ff,#faddeb 82%)",
+            background: "linear-gradient(120deg,#ddf2ff,#faddeb 82%)"
           }}
           tabIndex={0}
         >
