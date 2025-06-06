@@ -335,12 +335,12 @@ function PostCard({ post, onLike, darkMode }) {
 
 // --- PUBLIC_INTERFACE: Explore/Recommended Section ---
 function ExploreRecommendations() {
-  // Mockup: Random user suggestions with avatars.
+  // Mockup: Random user suggestions with avatars and a few thumbnail links.
   const suggestions = users.slice(0, 3);
   const imgs = [
-    "https://picsum.photos/seed/ex1/64/64",
-    "https://picsum.photos/seed/ex2/64/64",
-    "https://picsum.photos/seed/ex3/64/64",
+    "/assets/avatar1.png",
+    "/assets/avatar2.png",
+    "/assets/avatar3.png",
   ];
   return (
     <div className="explore-rec-wrap">
