@@ -283,8 +283,8 @@ function StoryModal({ story, onClose, onPrev, onNext }) {
   );
 }
 
-// --- PUBLIC_INTERFACE: Single Feed Post Card ---
-function PostCard({ post, onLike, darkMode }) {
+/* --- PUBLIC_INTERFACE: Single Feed Post Card --- */
+function PostCard({ post, onLike }) {
   const [likeAnimating, setLikeAnimating] = useState(false);
 
   const handleLike = (e) => {
