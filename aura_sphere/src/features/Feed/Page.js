@@ -13,9 +13,10 @@ const users = [
   { id: "5", name: "Noor", avatar: "/assets/avatar5.png" },
   { id: "6", name: "Kai", avatar: "/assets/avatar6.png" },
   { id: "7", name: "Rhea", avatar: "/assets/avatar7.png" },
+  { id: "8", name: "Siden", avatar: "/assets/avatar1.png" }, // Siden, placeholder avatar, matches Explore
 ];
-const generatePosts = (count = 7) => {
-  // Map of user name to sample post image file name
+const generatePosts = (count = 8) => {
+  // Map of user name to sample post image file name for all required demo users
   const userPostImageMap = {
     Willow: "/assets/post-willow.jpg",
     Seren: "/assets/post-seren.jpg",
