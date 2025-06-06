@@ -133,7 +133,7 @@ function GradientAuraBackground() {
       className="pointer-events-none fixed z-0 top-0 left-0 w-full h-full overflow-hidden"
       style={{ filter: "blur(48px)", opacity: 0.36 }}
     >
-      <div className="absolute top-[-10%] left-[30%] w-[40vw] h-[38vw] bg-gradient-to-r from-pink-300 via-sky-200 to-blue-200 rounded-full mix-blend-multiply animate-pulseBlob" />
+      <div className="absolute top-[-10%] left-[30%] w-[40vw] h-[38vw] bg-gradient-to-r from-pink-300 via-gray-200 to-gray-400 rounded-full mix-blend-multiply animate-pulseBlob" />
       <div className="absolute bottom-[-15%] right-[17%] w-[33vw] h-[28vw] bg-gradient-to-l from-fuchsia-300 via-violet-200 to-purple-200 rounded-[55%] opacity-60 animate-pulseBlob2" />
       <div className="absolute top-[70%] left-[-6%] w-[28vw] h-[20vw] bg-gradient-to-b from-amber-200 via-pink-100 to-pink-300 rounded-full opacity-50 animate-pulseBlob3" />
       <style>

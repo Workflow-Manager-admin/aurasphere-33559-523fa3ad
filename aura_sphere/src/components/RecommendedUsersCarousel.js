@@ -43,7 +43,7 @@ function RecommendedUsersCarousel({ users }) {
               className="flex flex-col items-center min-w-[80px] max-w-[94px] snap-start"
               style={{ touchAction: "pan-x" }}
             >
-              <div className={`rounded-full overflow-hidden mb-2 p-1 bg-gradient-to-r from-fuchsia-300 via-sky-200 to-pink-100 shadow-lg animate-pulseUsr${idx % 3}`}>
+              <div className={`rounded-full overflow-hidden mb-2 p-1 bg-gradient-to-r from-fuchsia-300 via-gray-200 to-pink-100 shadow-lg animate-pulseUsr${idx % 3}`}>
                 <img
                   src={user.avatar}
                   alt={user.name}
@@ -52,7 +52,7 @@ function RecommendedUsersCarousel({ users }) {
                 />
               </div>
               <span className="text-sm font-medium text-gray-800">{user.name}</span>
-              <button className="mt-1 px-3 py-1 bg-gradient-to-r from-pink-200 via-blue-100 to-violet-200 text-indigo-900 text-xs font-semibold rounded-xl shadow transition-colors active:scale-98">
+              <button className="mt-1 px-3 py-1 bg-gradient-to-r from-pink-200 via-gray-200 to-violet-200 text-indigo-900 text-xs font-semibold rounded-xl shadow transition-colors active:scale-98">
                 Follow
               </button>
               <style>{`
