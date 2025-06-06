@@ -1,6 +1,6 @@
 :root {
-  --base-light: #00ffff;
-  --base-dark: #00008b;
+  --base-light: #000000; /* Was #00ffff (cyan/blue) */
+  --base-dark: #000000; /* Was #00008b (dark blue) */
   --text-color: #ffffff;
   --text-secondary: rgba(255, 255, 255, 0.7);
   --border-color: rgba(255, 255, 255, 0.1);
@@ -45,7 +45,7 @@ body {
 }
 
 .logo-symbol {
-  color: var(--base-light);
+  color: var(--base-light); /* Now black */
 }
 
 .container {
@@ -67,7 +67,7 @@ body {
 }
 
 .subtitle {
-  color: var(--base-light);
+  color: #000000;
   font-weight: 500;
   font-size: 1.1rem;
 }
