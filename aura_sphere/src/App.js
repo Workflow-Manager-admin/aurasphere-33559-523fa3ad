@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 
 import { FeedPage } from './features/Feed';
 import { ExplorePage } from './features/Explore';
@@ -16,21 +16,10 @@ import { MediaUploadPage } from './features/MediaUpload';
 import Sidebar from './components/Sidebar';
 
 import { AuthProvider, useAuth } from './features/Auth/AuthContext';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import SplashScreen from './components/SplashScreen';
 
-// Guard for protected routes (require authentication)
-function RequireAuth({ children }) {
-  const { isAuthenticated } = useAuth();
-  const location = useLocation();
-  if (!isAuthenticated) {
-    return <Navigate to="/" replace state={{ from: location }} />;
-  }
-  return children;
-}
-
 /**
- * AppRoutes for post-auth (main app routes, excludes root/splash+auth)
+ * AppRoutes for the main app UI after authentication.
  */
 function AppRoutes() {
   return (
@@ -38,82 +27,80 @@ function AppRoutes() {
       <Route path="/feed" element={<FeedPage />} />
       <Route path="/explore" element={<ExplorePage />} />
       <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/stories" element={<StoriesPage />} />
       <Route path="/messaging" element={<MessagingPage />} />
       <Route path="/admin" element={<AdminPage />} />
       <Route path="/notifications" element={<NotificationsPage />} />
       <Route path="/media-upload" element={<MediaUploadPage />} />
-      {/* Optionally, add a catch-all NotFound route here */}
+      {/* Optionally, add a catch-all NotFound route */}
+      <Route path="*" element={<Navigate to="/feed" replace />} />
     </Routes>
   );
 }
 
 /**
- * AuthFormContainer: wraps AuthPage so only the inner form (not dual brand) is shown in SplashScreen
+ * Standalone auth card for use in SplashScreen (minus full-page brand).
  */
-function AuthFormContainer() {
+function AuthCardOnly() {
+  // The AuthPage supports an `onlyCard` prop for this minimal display.
   return <AuthPage onlyCard />;
 }
 
+/**
+ * AppContent handles the splash->auth->main routing and persistent brand.
+ */
 function AppContent() {
   const { isAuthenticated } = useAuth();
-  const [splashComplete, setSplashComplete] = useState(false);
+  const [splashDone, setSplashDone] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  // After splash animation and (if needed) authentication, let user into main app
-  if (!splashComplete || !isAuthenticated) {
-    // Render the SplashScreen at root, dock brand after blooming, show auth card after slide
+  // If authenticated and on root ("/") route after splash, go to feed.
+  useEffect(() => {
+    if (splashDone && isAuthenticated && location.pathname === '/') {
+      navigate('/feed', { replace: true });
+    }
+  }, [splashDone, isAuthenticated, navigate, location.pathname]);
+
+  // Show splash until complete, then reveal auth if unauthenticated, else main app UI.
+  if (!splashDone) {
     return (
-      <SplashScreen
-        duration={2600}
-        // When auth is complete, trigger transition to app (handled below)
-      >
-        {/* Only reveal auth card if not authed (we check again after splash anim) */}
-        {!isAuthenticated && <AuthFormContainer />}
-        {/* If authed, SplashScreen will disappear once splashComplete is set below */}
+      <SplashScreen duration={2500}>
+        {/* After splash anim, the auth card appears, controlled inside SplashScreen */}
+        {!isAuthenticated ? (
+          <div style={{ zIndex: 200 }}>
+            <AuthCardOnly />
+          </div>
+        ) : null}
+        {/* SplashScreen will hide itself and brand when splashDone is set */}
+        <SplashScreenDoneSetter setDone={setSplashDone} />
       </SplashScreen>
     );
   }
 
-  // --- Main App Layout ---
+  // Still not logged in: Show persistent brand at top left and auth UI at center.
+  if (!isAuthenticated) {
+    return (
+      <div className="app" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <BrandTopLeft />
+        <div style={{
+          flex: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "linear-gradient(120deg, #1a1424 70%, #232235 100%)",
+          minHeight: 'calc(100vh - 56px)'
+        }}>
+          <AuthCardOnly />
+        </div>
+      </div>
+    );
+  }
+
+  // --- Main App Layout: persistent "My AuraGram" brand top-left always visible ---
   return (
     <div className="app" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* --- The fixed animated brand at top left --- */}
-      <div
-        style={{
-          height: 56,
-          display: 'flex',
-          alignItems: 'center',
-          background: 'var(--base-dark)',
-          borderBottom: '1px solid var(--border-color)',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          zIndex: 100,
-        }}
-      >
-        <span
-          className="auragram-brand"
-          style={{
-            fontWeight: 900,
-            fontSize: '2.0rem',
-            letterSpacing: '2.5px',
-            color: '#fff',
-            marginLeft: 32,
-            cursor: 'pointer',
-            transition: 'color 0.18s, background 0.18s',
-            padding: '2px 18px 2px 0',
-            borderRadius: 8
-          }}
-          tabIndex={0}
-          onMouseOver={e => { e.currentTarget.style.color = '#e087fb'; e.currentTarget.style.background = 'rgba(51,19,90,0.13)'; }}
-          onFocus={e => { e.currentTarget.style.color = '#e087fb'; e.currentTarget.style.background = 'rgba(51,19,90,0.13)'; }}
-          onMouseOut={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.background = 'transparent'; }}
-          onBlur={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.background = 'transparent'; }}
-        >
-          MY AURAGRAM
-        </span>
-      </div>
-      {/* Sidebar + routed content */}
+      <BrandTopLeft />
       <div className="main-layout" style={{ display: 'flex', flex: 1, paddingTop: 56 }}>
         <Sidebar />
         <main className="main-content" style={{
@@ -140,9 +127,66 @@ function AppContent() {
   );
 }
 
+/**
+ * BrandTopLeft renders the persistent top-left "My AuraGram" brand bar.
+ */
+function BrandTopLeft() {
+  return (
+    <div
+      style={{
+        height: 56,
+        display: 'flex',
+        alignItems: 'center',
+        background: 'var(--base-dark)',
+        borderBottom: '1px solid var(--border-color)',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        zIndex: 100,
+      }}
+    >
+      <span
+        className="auragram-brand"
+        style={{
+          fontWeight: 900,
+          fontSize: '2.0rem',
+          letterSpacing: '2.5px',
+          color: '#fff',
+          marginLeft: 32,
+          cursor: 'pointer',
+          transition: 'color 0.18s, background 0.18s',
+          padding: '2px 18px 2px 0',
+          borderRadius: 8
+        }}
+        tabIndex={0}
+        onMouseOver={e => { e.currentTarget.style.color = '#e087fb'; e.currentTarget.style.background = 'rgba(51,19,90,0.13)'; }}
+        onFocus={e => { e.currentTarget.style.color = '#e087fb'; e.currentTarget.style.background = 'rgba(51,19,90,0.13)'; }}
+        onMouseOut={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.background = 'transparent'; }}
+        onBlur={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.background = 'transparent'; }}
+      >
+        MY AURAGRAM
+      </span>
+    </div>
+  );
+}
+
+/**
+ * SplashScreenDoneSetter: invisible helper component to set splashDone after effect.
+ * This ensures only one completion event is dispatched regardless of children.
+ */
+function SplashScreenDoneSetter({ setDone }) {
+  useEffect(() => {
+    // SplashScreen anim is approximately 2.5+1 seconds for full settle.
+    const t = setTimeout(() => setDone(true), 2550 + 940);
+    return () => clearTimeout(t);
+  }, [setDone]);
+  return null;
+}
+
 function App() {
   // Enforce dark mode on mount
-  React.useEffect(() => {
+  useEffect(() => {
     document.body.classList.add('theme-dark');
     document.body.classList.remove('theme-light');
     if (typeof localStorage !== "undefined") {
@@ -153,12 +197,9 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        {/* Always mount AppContent at '/' (root) */}
+        {/* Mount AppContent at root */}
         <Routes>
-          <Route
-            path="/*"
-            element={<AppContent />}
-          />
+          <Route path="*" element={<AppContent />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
