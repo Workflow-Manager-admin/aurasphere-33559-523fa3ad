@@ -292,10 +292,10 @@ body.theme-light {
 .rec-thumb-link {
   border-radius: 7.6px;
   overflow: hidden;
-  background: var(--aura-gradient-violet);
+  background: linear-gradient(120deg, #000000, #333333, #ffe5f5);
   display: inline-block;
   width: 54px; height: 54px;
-  box-shadow: 0 1.3px 6px #d9afff33;
+  box-shadow: 0 1.3px 6px #22222233;
   transition: transform 0.16s;
 }
 .rec-thumb-img {
