@@ -190,8 +190,8 @@ function HomePage() {
   );
 }
 
-// --- PUBLIC_INTERFACE: Stories Carousel ---
-function StoriesCarousel({ stories, onStoryClick, darkMode }) {
+/* --- PUBLIC_INTERFACE: Stories Carousel --- */
+function StoriesCarousel({ stories, onStoryClick }) {
   return (
     <div className="aura-stories-carousel">
       <div className="stories-list">
