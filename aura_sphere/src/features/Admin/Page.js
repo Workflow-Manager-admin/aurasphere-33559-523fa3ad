@@ -1,4 +1,3 @@
-Explanation: Stub for the Admin feature's page component.
 import React from 'react';
 
 // PUBLIC_INTERFACE
