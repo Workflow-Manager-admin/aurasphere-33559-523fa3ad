@@ -18,7 +18,6 @@ import Sidebar from './components/Sidebar';
 import { AuthProvider, useAuth } from './features/Auth/AuthContext';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import SplashScreen from './components/SplashScreen';
-import React, { useState } from 'react';
 
 // Guard for protected routes (require authentication)
 function RequireAuth({ children }) {
