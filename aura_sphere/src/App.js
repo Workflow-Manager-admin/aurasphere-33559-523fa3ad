@@ -16,7 +16,7 @@ import { MediaUploadPage } from './features/MediaUpload';
 import Sidebar from './components/Sidebar';
 
 import { AuthProvider, useAuth } from './features/Auth/AuthContext';
-import { Navigate, useLocation, useNavigate, Routes, Route } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import SplashScreen from './components/SplashScreen';
 import React, { useState } from 'react';
 
