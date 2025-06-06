@@ -10,7 +10,7 @@ import { StoriesPage } from './features/Stories';
 import { MessagingPage } from './features/Messaging';
 import { AdminPage } from './features/Admin';
 import { NotificationsPage } from './features/Notifications';
-import { AuthPage } from './features/Auth';
+
 import { MediaUploadPage } from './features/MediaUpload';
 
 import Sidebar from './components/Sidebar';
@@ -39,11 +39,144 @@ function AppRoutes() {
 }
 
 /**
- * Standalone auth card for use in SplashScreen (minus full-page brand).
+ * AuthCard: The login/signup UI in a modal/panel style for SplashScreen, using Tailwind.
+ * Note: Now decoupled from "full auth page"; this is just the core form (with a brand row).
  */
-function AuthCardOnly() {
-  // The AuthPage supports an `onlyCard` prop for this minimal display.
-  return <AuthPage onlyCard />;
+import { useState } from "react";
+import { useAuth } from "./features/Auth/AuthContext";
+
+// PUBLIC_INTERFACE
+function AuthCard() {
+  const [mode, setMode] = useState("login"); // 'login' | 'signup'
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [err, setErr] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { login, signup } = useAuth();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setErr("");
+    if (!email || !password) {
+      setErr("Please enter both email and password.");
+      setLoading(false);
+      return;
+    }
+    const fn = mode === "login" ? login : signup;
+    const res = await fn(email.trim(), password);
+    setLoading(false);
+    if (res && res.ok) {
+      // AuthRedirect handled in parent as app state.
+    } else {
+      setErr((res && res.error) || "Unknown error, please try again.");
+    }
+  };
+
+  return (
+    <div
+      className="rounded-2xl shadow-2xl max-w-[380px] sm:max-w-md w-[96vw] py-8 px-6 bg-gradient-to-br from-neutral-900/90 via-indigo-900/80 to-black/80
+      border border-violet-900/40 fadein-auth shadow-fuchsia-900/30 transition-all duration-700"
+      style={{ animation: "fadeInAuthPanel 0.68s" }}
+      tabIndex={-1}
+    >
+      {/* Brand */}
+      <div className="flex flex-row items-center gap-2 mb-3">
+        <span className="text-[1.7rem] font-black tracking-widest text-pink-300 drop-shadow select-none" style={{ fontFamily: "'Times New Roman', Times, serif" }}>
+          AURAGRAM
+        </span>
+      </div>
+      <div className="text-zinc-200 text-[1.03rem] mb-6 leading-tight text-center" style={{ opacity: 0.82 }}>
+        Welcome to your digital aura space.<br />
+        <span className="font-bold text-fuchsia-200">
+          {mode === "login" ? "Sign in" : "Sign up"} to join the flow.
+        </span>
+      </div>
+      {/* Toggle bar */}
+      <div className="flex mb-6 border bg-gradient-to-r from-zinc-800/30 to-violet-900/10 rounded-lg overflow-hidden">
+        <button
+          onClick={() => { setMode("login"); setErr(""); }}
+          type="button"
+          className={`flex-1 py-2 font-bold text-base transition-all
+          ${mode === "login" ? "bg-gradient-to-r from-violet-900/70 to-pink-900/70 text-white shadow" : "text-fuchsia-200 bg-transparent"}
+          `}
+          aria-pressed={mode === "login"}
+        >Sign In</button>
+        <button
+          onClick={() => { setMode("signup"); setErr(""); }}
+          type="button"
+          className={`flex-1 py-2 font-bold text-base transition-all
+          ${mode === "signup" ? "bg-gradient-to-r from-fuchsia-800/80 to-indigo-900/80 text-white shadow" : "text-violet-200 bg-transparent"}
+          `}
+          aria-pressed={mode === "signup"}
+        >Sign Up</button>
+      </div>
+      {/* Error */}
+      {err && (
+        <div className="mb-4 py-2 px-3 rounded bg-pink-950/70 text-pink-200 font-semibold text-[1.04rem] animate-shake">
+          {err}
+        </div>
+      )}
+      {/* Form */}
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit} autoComplete="on" spellCheck={false}>
+        <input
+          className="bg-black/80 border border-violet-700 text-white rounded-lg px-4 py-3 text-[1.07rem] outline-none focus:border-pink-400 focus:shadow-md"
+          type="email"
+          placeholder="Email"
+          value={email}
+          disabled={loading}
+          autoFocus
+          onChange={e => setEmail(e.target.value)}
+          required
+        />
+        <input
+          className="bg-black/70 border border-violet-800 text-white rounded-lg px-4 py-3 text-[1.11rem] outline-none focus:border-pink-400 focus:shadow-md"
+          type="password"
+          placeholder="Password"
+          minLength={4}
+          autoComplete={mode === "login" ? "current-password" : "new-password"}
+          value={password}
+          disabled={loading}
+          onChange={e => setPassword(e.target.value)}
+          required
+        />
+        <button
+          className="rounded-lg bg-gradient-to-r from-fuchsia-700 to-purple-900 py-3 font-extrabold text-white text-lg mt-2 shadow transition-all active:scale-[.98] hover:brightness-110 focus:outline-none"
+          type="submit"
+          disabled={loading}
+        >
+          {loading
+            ? (mode === "login" ? "Signing In..." : "Signing Up...")
+            : (mode === "login" ? "Sign In" : "Create Account")}
+        </button>
+      </form>
+      {/* Hint && toggle link */}
+      <div className="mt-5 text-center text-zinc-300">
+        {mode === "login" ? (
+          <span>Don&apos;t have an account?
+            <button className="underline text-fuchsia-400 ml-1 font-bold hover:text-fuchsia-200 bg-transparent border-0"
+              type="button" onClick={() => { setMode("signup"); setErr(""); }}>
+              Sign up
+            </button>
+          </span>
+        ) : (
+          <span>Already a member?
+            <button className="underline text-pink-100 ml-1 font-bold hover:text-fuchsia-200 bg-transparent border-0"
+              type="button" onClick={() => { setMode("login"); setErr(""); }}>
+              Sign in
+            </button>
+          </span>
+        )}
+      </div>
+      {/* Animations */}
+      <style>{`
+        @keyframes fadeInAuthPanel { from { opacity:0; transform: scale(.97) translateY(18px);} to { opacity:1; transform:none; } }
+        .fadein-auth { animation: fadeInAuthPanel 0.68s cubic-bezier(.34,0,.36,1); }
+        @keyframes shake { 0%{transform:translateX(0);} 28%{transform:translateX(-7px);} 55%{transform:translateX(4px);} 75%{transform:translateX(-2px);} 100%{transform:translateX(0);} }
+        .animate-shake { animation: shake 0.33s cubic-bezier(.60,0,.50,1); }
+      `}</style>
+    </div>
+  );
 }
 
 /**
@@ -66,13 +199,12 @@ function AppContent() {
   if (!splashDone) {
     return (
       <SplashScreen duration={2500}>
-        {/* After splash anim, the auth card appears, controlled inside SplashScreen */}
-        {!isAuthenticated ? (
-          <div style={{ zIndex: 200 }}>
-            <AuthCardOnly />
+        {/* After brand anim, show AuthCard with fade-in */}
+        {!isAuthenticated &&
+          <div className="transition-opacity duration-700 animate-fadein z-30">
+            <AuthCard />
           </div>
-        ) : null}
-        {/* SplashScreen will hide itself and brand when splashDone is set */}
+        }
         <SplashScreenDoneSetter setDone={setSplashDone} />
       </SplashScreen>
     );
@@ -80,21 +212,8 @@ function AppContent() {
 
   // Still not logged in: Show persistent brand at top left and auth UI at center.
   if (!isAuthenticated) {
-    return (
-      <div className="app" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-        <BrandTopLeft />
-        <div style={{
-          flex: 1,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "linear-gradient(120deg, #1a1424 70%, #232235 100%)",
-          minHeight: 'calc(100vh - 56px)'
-        }}>
-          <AuthCardOnly />
-        </div>
-      </div>
-    );
+    // Auth UI is only shown via SplashScreen, so after splashDone unauthenticated, show nothing (waiting for login)
+    return null;
   }
 
   // --- Main App Layout: persistent "My AuraGram" brand top-left always visible ---
