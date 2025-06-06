@@ -42,8 +42,7 @@ function AppRoutes() {
  * AuthCard: The login/signup UI in a modal/panel style for SplashScreen, using Tailwind.
  * Note: Now decoupled from "full auth page"; this is just the core form (with a brand row).
  */
-import { useState } from "react";
-import { useAuth } from "./features/Auth/AuthContext";
+/* useAuth already imported at top, do not import again. */
 
 // PUBLIC_INTERFACE
 function AuthCard() {
