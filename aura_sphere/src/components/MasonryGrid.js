@@ -44,7 +44,7 @@ function MasonryGrid({ posts, onPostClick, pastel, gradient }) {
           />
           <div className="absolute left-0 right-0 bottom-0 flex flex-col items-start gap-0 px-3 pb-2 pt-8 bg-gradient-to-t from-white/70 via-white/20 to-transparent pointer-events-none">
             <span className="text-xs font-bold text-pink-400 drop-shadow-sm">{`❤ ${post.likes}`}</span>
-            <span className="text-xs font-semibold text-gray-800/90">{post.user.name}</span>
+            <span className="text-xs font-semibold text-black/90">{post.user.name}</span>
           </div>
           <div className="absolute inset-0 opacity-0 group-hover:opacity-75 group-focus:opacity-75 transition-all duration-200 bg-gradient-to-br from-violet-100/70 via-pink-100/18 to-sky-100/8"></div>
         </button>

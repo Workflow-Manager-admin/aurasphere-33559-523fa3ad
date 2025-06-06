@@ -61,8 +61,8 @@ function Sidebar() {
           gap: 8px;
         }
         .sidebar-link:hover, .sidebar-active {
-          background: rgba(0,255,255,0.12);
-          color: var(--base-light);
+          background: rgba(0,0,0,0.10);
+          color: #000;
         }
 
         @media (max-width: 900px) {

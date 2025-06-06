@@ -34,7 +34,7 @@ function RecommendedUsersCarousel({ users }) {
         >‹</button>
         <div
           ref={carousel}
-          className="flex gap-4 overflow-x-auto py-2 px-2 scrollbar-thin scrollbar-thumb-blue-100 scrollbar-track-purple-50 snap-x snap-mandatory select-none no-scrollbar transition-shadow"
+          className="flex gap-4 overflow-x-auto py-2 px-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-purple-50 snap-x snap-mandatory select-none no-scrollbar transition-shadow"
           tabIndex={0}
         >
           {users.map((user, idx) => (

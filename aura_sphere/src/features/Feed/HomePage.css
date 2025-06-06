@@ -260,7 +260,7 @@ body.theme-light {
   flex-direction: column;
   gap: 3px;
 }
-.post-likes { font-weight: 600; color: #34e2ff; margin-bottom: 2px; }
+.post-likes { font-weight: 600; color: #000000; margin-bottom: 2px; }
 .post-caption-text { font-weight: 400; color: var(--text-color);}
 .post-comments-link {
   color: #9275e7;

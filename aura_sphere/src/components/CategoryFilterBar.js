@@ -29,7 +29,7 @@ function CategoryFilterBar({ categories, selected, onSelect }) {
             "flex-shrink-0 px-5 py-2 rounded-full font-medium text-sm focus:outline-none transition-all" +
             " " +
             (cat === selected
-              ? "bg-gradient-to-r from-fuchsia-300 to-pink-200 text-indigo-900 shadow-md scale-105"
+              ? "bg-gradient-to-r from-fuchsia-300 to-pink-200 text-black shadow-md scale-105"
               : "bg-gradient-to-r from-pink-50 via-gray-200 to-violet-100 text-black hover:scale-102")
           }
           aria-pressed={cat === selected}

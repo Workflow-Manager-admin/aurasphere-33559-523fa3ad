@@ -10,7 +10,7 @@ function SearchBar({ value, onChange }) {
 
   return (
     <div className="relative flex items-center w-full max-w-xl mx-auto">
-      <span className="absolute left-3 text-sky-400 text-lg" aria-hidden>
+      <span className="absolute left-3 text-black text-lg" aria-hidden>
         <svg width="1em" height="1em" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="10" r="7" stroke="currentColor" strokeWidth="2"/><path d="M18 18L15.2 15.2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
       </span>
       <input
