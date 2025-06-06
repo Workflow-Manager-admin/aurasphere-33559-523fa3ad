@@ -1,0 +1,1 @@
+Explanation: Add a .keep file to ensure the /components directory is committed even when empty. This is a placeholder and can be removed once components are added.
