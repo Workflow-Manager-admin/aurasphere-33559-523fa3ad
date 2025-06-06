@@ -1,11 +1,11 @@
 :root {
   --aura-gradient-pink: linear-gradient(90deg, #ffc2e2 0%, #e0ccff 100%);
-  --aura-gradient-blue: linear-gradient(135deg, #7fdfff 20%, #c9f7fe 100%);
+  --aura-gradient-blue: linear-gradient(135deg, #000000 20%, #333333 100%);
   --aura-gradient-violet: linear-gradient(120deg, #b9deff, #e9e5f8, #ffe5f5);
-  --aura-main-gradient: linear-gradient(99deg, #64e4ff 0%, #ffaaff 100%);
+  --aura-main-gradient: linear-gradient(99deg, #000000 0%, #ffaaff 100%);
   --aura-card-bg: #1f1e29;
   --aura-card-bg-light: #fafaff;
-  --aura-shadow: 0 4px 22px 0 rgba(139, 180, 255, 0.16);
+  --aura-shadow: 0 4px 22px 0 rgba(0, 0, 0, 0.16);
 }
 body.theme-dark {
   background: #181923;
@@ -281,7 +281,7 @@ body.theme-light {
   font-weight: 700;
   letter-spacing: 0.06em;
   margin-bottom: 10px;
-  color: #7bcafc;
+  color: #000000;
   background: var(--aura-gradient-pink);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -309,11 +309,11 @@ body.theme-light {
 }
 .rec-user-row {
   display: flex; align-items: center;
-  background: var(--aura-gradient-blue);
+  background: linear-gradient(135deg, #000000 20%, #333333 100%);
   gap: 8px;
   border-radius: 8px;
   padding: 7px 9px 7px 2.5px;
-  box-shadow: 0 2px 12px #daf1ff38;
+  box-shadow: 0 2px 12px #22222238;
 }
 .rec-user-ava {
   width: 30px; height: 30px;
