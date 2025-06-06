@@ -22,7 +22,12 @@ function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 const DEMO_POSTS = Array.from({ length: 25 }, (_, i) => {
-  const u = demoUsers[i % demoUsers.length];
+  // Assign avatar image for each user post
+  const avatarIdx = (i % demoUsers.length) + 1;
+  const u = {
+    ...demoUsers[i % demoUsers.length],
+    avatar: `/assets/avatar${avatarIdx}.png`,
+  };
   const ratio = [3 / 4, 1, 5 / 4][i % 3] + (Math.random() * 0.15 - 0.08);
   return {
     id: `explore-${i}`,

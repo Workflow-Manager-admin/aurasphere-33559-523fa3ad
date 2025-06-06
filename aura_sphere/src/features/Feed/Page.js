@@ -43,7 +43,10 @@ const generatePosts = (count = 7) => {
 };
 const mockStories = users.map((u, i) => ({
   id: `story-${i}`,
-  user: u,
+  user: {
+    ...u,
+    avatar: `/assets/avatar${(i % 7) + 1}.png`
+  },
   media: [
     { type: "image", src: `https://picsum.photos/seed/st${i * 2}/400/700`, time: 7 },
     { type: "image", src: `https://picsum.photos/seed/st${i * 2 + 1}/400/700`, time: 7 },
