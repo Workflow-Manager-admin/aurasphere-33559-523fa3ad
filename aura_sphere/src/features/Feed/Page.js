@@ -6,13 +6,13 @@ function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 const users = [
-  { id: "1", name: "Willow", avatar: "/assets/story-ava1.png" },
-  { id: "2", name: "Seren", avatar: "/assets/story-ava2.png" },
-  { id: "3", name: "Aiden", avatar: "/assets/story-ava3.png" },
-  { id: "4", name: "Sky", avatar: "/assets/story-ava4.png" },
-  { id: "5", name: "Noor", avatar: "/assets/story-ava5.png" },
-  { id: "6", name: "Kai", avatar: "/assets/story-ava6.png" },
-  { id: "7", name: "Rhea", avatar: "/assets/story-ava7.png" },
+  { id: "1", name: "Willow", avatar: "/assets/avatar1.png" },
+  { id: "2", name: "Seren", avatar: "/assets/avatar2.png" },
+  { id: "3", name: "Aiden", avatar: "/assets/avatar3.png" },
+  { id: "4", name: "Sky", avatar: "/assets/avatar4.png" },
+  { id: "5", name: "Noor", avatar: "/assets/avatar5.png" },
+  { id: "6", name: "Kai", avatar: "/assets/avatar6.png" },
+  { id: "7", name: "Rhea", avatar: "/assets/avatar7.png" },
 ];
 const generatePosts = (count = 7) => {
   return Array.from({ length: count }, (_, i) => {
