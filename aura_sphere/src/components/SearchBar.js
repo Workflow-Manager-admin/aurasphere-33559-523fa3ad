@@ -16,7 +16,7 @@ function SearchBar({ value, onChange }) {
       <input
         ref={ref}
         type="search"
-        className="w-full rounded-full bg-gradient-to-r from-white/85 via-blue-50/70 to-fuchsia-50/85 border border-pink-200/45 px-11 py-2 focus:outline-none focus:ring-2 focus:ring-sky-300 text-base text-gray-800 placeholder:text-gray-400 transition-shadow shadow-md"
+        className="w-full rounded-full bg-gradient-to-r from-white/85 via-gray-100/70 to-fuchsia-50/85 border border-pink-200/45 px-11 py-2 focus:outline-none focus:ring-2 focus:ring-black text-base text-gray-800 placeholder:text-gray-400 transition-shadow shadow-md"
         placeholder="Search posts, creators, #hashtags..."
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
