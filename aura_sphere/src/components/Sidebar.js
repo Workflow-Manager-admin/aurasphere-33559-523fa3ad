@@ -20,7 +20,48 @@ function Sidebar() {
   return (
     <aside className="sidebar">
       {/* Brand at top - MY AURAGRAM */}
-      <div className="sidebar-brand" tabIndex={0}>
+      <div
+        className="sidebar-brand"
+        tabIndex={0}
+        style={{
+          fontFamily: "'Times New Roman', Times, serif",
+          fontSize: "2.5rem",
+          fontWeight: 900,
+          color: "#fff",
+          letterSpacing: "2.5px",
+          marginLeft: 14,
+          marginBottom: 28,
+          cursor: "pointer",
+          borderRadius: 16,
+          lineHeight: "1.09",
+          padding: "5px 32px 7px 0",
+          transition: "color 0.23s cubic-bezier(.53,0,.53,1), background 0.18s cubic-bezier(.49,.03,.61,1), filter 0.20s",
+          background: "none",
+          outline: "none",
+          textShadow: "0 4px 18px #c580ff29, 0 2.5px 2.5px #39005818"
+        }}
+        onMouseOver={e => {
+          e.currentTarget.style.color = "#e087fb";
+          e.currentTarget.style.background = "rgba(51,19,90,0.13)";
+          e.currentTarget.style.filter = "drop-shadow(0 0 25px #db9ffd8A)";
+        }}
+        onFocus={e => {
+          e.currentTarget.style.color = "#e087fb";
+          e.currentTarget.style.background = "rgba(51,19,90,0.13)";
+          e.currentTarget.style.filter = "drop-shadow(0 0 25px #db9ffd8A)";
+        }}
+        onMouseOut={e => {
+          e.currentTarget.style.color = "#fff";
+          e.currentTarget.style.background = "none";
+          e.currentTarget.style.filter = "";
+        }}
+        onBlur={e => {
+          e.currentTarget.style.color = "#fff";
+          e.currentTarget.style.background = "none";
+          e.currentTarget.style.filter = "";
+        }}
+        aria-label="MY AURAGRAM app branding"
+      >
         MY AURAGRAM
       </div>
       <div className="sidebar-links">
