@@ -7,19 +7,12 @@
   --aura-card-bg-light: #fafaff;
   --aura-shadow: 0 4px 22px 0 rgba(0, 0, 0, 0.16);
 }
-body.theme-dark {
-  background: #181923;
+body.theme-dark, body {
+  background: #181923 !important;
   --aura-card-bg: #232235;
   --aura-card-bg-light: #282d37;
   --text-color: #fff;
   --border-color: #263751;
-}
-body.theme-light {
-  background: #f2f7fa;
-  --aura-card-bg: #fff;
-  --aura-card-bg-light: #eaf2fb;
-  --text-color: #18192A;
-  --border-color: #e1e6f0;
 }
 .aura-homepage {
   display: flex;
@@ -429,20 +422,7 @@ body.theme-light {
 .rec-user-follow:hover {
   filter: brightness(1.16);
 }
-.darkmode-toggle {
-  margin-top: 30px;
-  align-self: center;
-  padding: 9px 24px;
-  font-size: 1.07rem;
-  font-weight: 600;
-  border: none;
-  border-radius: 12px;
-  background: var(--aura-main-gradient);
-  color: #fff;
-  box-shadow: 0 1.2px 8px #9ef6ff1a;
-  cursor: pointer;
-  transition: background 0.18s;
-}
+
 .aura-gradient-btn {
   background: var(--aura-main-gradient);
   color: #fff; border: none;

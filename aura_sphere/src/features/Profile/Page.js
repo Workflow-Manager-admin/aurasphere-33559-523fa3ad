@@ -83,14 +83,14 @@ const PROFILE_TABS = [
 
 // PUBLIC_INTERFACE
 function ProfilePage() {
-  // Theme: Optional responsive dark mode via prefers
-  const prefersDark =
-    typeof window !== "undefined" &&
-    window.matchMedia?.("(prefers-color-scheme: dark)").matches;
-  // using state for demo, ideally grab theme via context
-  const [darkMode, setDarkMode] = useState(
-    localStorage.getItem("aura_theme") || (prefersDark ? "dark" : "light")
-  );
+  // Theme: Always dark mode, all toggles and localStorage code removed.
+  React.useEffect(() => {
+    document.body.classList.add("theme-dark");
+    document.body.classList.remove("theme-light");
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem("aura_theme", "dark");
+    }
+  }, []);
 
   const [activeTab, setActiveTab] = useState("grid");
   const [following, setFollowing] = useState(false); // for follow button logic
@@ -103,28 +103,12 @@ function ProfilePage() {
   // "Me" user props for edit action vs follow
   const isMe = PROFILE_USER.isMe;
 
-  // Handle theme toggle (update body class, store in localStorage)
-  const handleThemeToggle = () => {
-    const newTheme = darkMode === "dark" ? "light" : "dark";
-    setDarkMode(newTheme);
-    document.body.classList.toggle("theme-dark", newTheme === "dark");
-    document.body.classList.toggle("theme-light", newTheme === "light");
-    localStorage.setItem("aura_theme", newTheme);
-  };
-
-  // For responsive dark mode backgrounds
-  React.useEffect(() => {
-    document.body.classList.toggle("theme-dark", darkMode === "dark");
-    document.body.classList.toggle("theme-light", darkMode === "light");
-  }, [darkMode]);
-
   return (
     <div className="profile-page min-h-[calc(100vh-64px)] flex flex-col items-center px-0 pt-8 pb-16 transition-all">
       {/* Profile Header */}
       <section className="relative w-full max-w-3xl mx-auto flex flex-col sm:flex-row items-center sm:items-start gap-7 sm:gap-10 pt-2 pb-2">
         <ProfileHeader
           user={PROFILE_USER}
-          darkMode={darkMode}
           isMe={isMe}
           following={following}
           setFollowing={setFollowing}
@@ -137,13 +121,6 @@ function ProfilePage() {
             following={following}
             setFollowing={setFollowing}
           />
-          {/* Dark mode toggle present here for demo */}
-          <button
-            className="mt-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-violet-200 via-pink-100 to-fuchsia-200 text-gray-900 shadow-lg hover:bg-gradient-to-tr focus:outline-none transition"
-            onClick={handleThemeToggle}
-          >
-            {darkMode === "dark" ? "🌙 Dark Mode" : "🔆 Light Mode"}
-          </button>
         </div>
       </section>
 
@@ -164,7 +141,6 @@ function ProfilePage() {
           posts={posts}
           reels={reels}
           tagged={tagged}
-          darkMode={darkMode}
         />
       </section>
 
@@ -174,12 +150,8 @@ function ProfilePage() {
       {/* Inline styles for pastel/gradient and mobile responsiveness */}
       <style>{`
         .profile-page {
-          /* Subtle pastel bg, for light theme, otherwise dark */
-          background: ${
-            darkMode === "light"
-              ? "linear-gradient(135deg, #ffe0fa 0%, #ebf7fd 50%, #e5e6ff 100%)"
-              : "linear-gradient(125deg, #10101b 55%, #232235 100%)"
-          };
+          /* Always dark background; light mode removed */
+          background: linear-gradient(125deg, #10101b 55%, #232235 100%);
           transition: background 0.25s;
         }
         /* Avatars and grid responsive */
