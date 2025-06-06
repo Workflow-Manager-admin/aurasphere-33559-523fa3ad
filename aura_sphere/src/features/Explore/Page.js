@@ -17,13 +17,16 @@ const demoUsers = [
   { id: "5", name: "Noor", avatar: "/assets/avatar5.png" },
   { id: "6", name: "Kai", avatar: "/assets/avatar6.png" },
   { id: "7", name: "Rhea", avatar: "/assets/avatar7.png" },
+  { id: "8", name: "Siden", avatar: "/assets/avatar1.png" }, // Siden, placeholder avatar1
 ];
 function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
+// Map of every user name to post image if local, including Siden
 const userPostImageMap = {
   Willow: "/assets/post-willow.jpg",
   Seren: "/assets/post-seren.jpg",
+  Siden: "/assets/post-siden.jpg",
   Sky: "/assets/post-sky.jpg",
   Noor: "/assets/post-noor.jpg",
   Kai: "/assets/post-kai.jpg",
@@ -34,10 +37,10 @@ const DEMO_POSTS = Array.from({ length: 25 }, (_, i) => {
   const avatarIdx = (i % demoUsers.length) + 1;
   const u = {
     ...demoUsers[i % demoUsers.length],
-    avatar: `/assets/avatar${avatarIdx}.png`,
+    avatar: `/assets/avatar${avatarIdx <= 7 ? avatarIdx : 1}.png`,
   };
   const ratio = [3 / 4, 1, 5 / 4][i % 3] + (Math.random() * 0.15 - 0.08);
-  // Use sample post image for user if available
+  // Use sample post image for user if available (now covers Siden & all keys)
   const sampleImageSrc = userPostImageMap[u.name] || `https://picsum.photos/seed/explore${i}${i * 37}/400/${Math.round(400 * ratio)}`;
   return {
     id: `explore-${i}`,
