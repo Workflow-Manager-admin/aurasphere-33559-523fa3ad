@@ -1,191 +1,183 @@
 import React, { useEffect, useState } from "react";
 
 /**
- * SplashScreen: centered "My AuraGram" blooming, then slides/shrinks to top-left, holds fixed,
- * then reveals login/signup UI.
- * Sequence:
- *  1. Centered brand symbol ("bloom" in - scale/fade/blur in).
- *  2. After ~1.5s, animates scale down and slides to header's top left.
- *  3. Auth UI fades/slides in only after animation.
- *
- * phases:
- *  'bloom' -> 'slide' -> 'fixed'
+ * SplashScreen Component
+ * - Shows "My AuraGram" centered with a blooming animation.
+ * - After 2.5 seconds, logo slides and shrinks to the top-left corner and stays fixed.
+ * - Once animation is complete, shows the auth form (children) in the center.
+ * - Modular, clean, and uses only React state for all transitions.
+ * - Animations/visibility via Tailwind utility classes + custom keyframes.
  *
  * Props:
- *   onComplete: called after animation and ready to show Auth UI.
+ *   children: (optional) - Auth form or UI to show after transition completes.
+ *   duration?: (optional) - Duration before transition (ms), default 2500.
+ *
+ * Usage:
+ *   <SplashScreen>
+ *     <YourAuthForm />
+ *   </SplashScreen>
  */
-//
 // PUBLIC_INTERFACE
-function SplashScreen({ onComplete }) {
-  // animation phase: "bloom" (center+grow), "slide" (move to top-left), "fixed" (done anim), "hide" (unmount)
+function SplashScreen({ children, duration = 2500 }) {
+  // 'bloom' (center-in), 'shrink-slide' (shrink+move), 'docked' (fixed top-left), 'complete'
   const [phase, setPhase] = useState("bloom");
-  // Auth UI visibility (to fade in after brand at top), internal phase management
-  const [showAuth, setShowAuth] = useState(false);
 
-  // Timing (can tweak for best feel)
   useEffect(() => {
     let t1, t2;
     if (phase === "bloom") {
-      // Hold bloom ~1.35s, then start slide
-      t1 = setTimeout(() => setPhase("slide"), 1350);
-    } else if (phase === "slide") {
-      // Slide-to-top-left and shrink (~0.85s), then fix and show auth after slight delay
-      t2 = setTimeout(() => {
-        setPhase("fixed");
-        setTimeout(() => setShowAuth(true), 300); // slight delay for settle
-      }, 850);
-    } else if (phase === "fixed") {
-      // Do nothing; wait for parent/onComplete to fade out.
+      t1 = setTimeout(() => setPhase("shrink-slide"), duration);
+    } else if (phase === "shrink-slide") {
+      t2 = setTimeout(() => setPhase("docked"), 950); // allow slide/shrink anim
     }
     return () => {
-      clearTimeout(t1); clearTimeout(t2);
+      clearTimeout(t1);
+      clearTimeout(t2);
     };
-  }, [phase]);
+  }, [phase, duration]);
 
-  // Handle completion: when auth appeared and user signals proceed, call onComplete
-  useEffect(() => {
-    // Future: Optionally automatically fade-out after some time.
-    // Not used (parent controls mount).
-  }, [showAuth, onComplete]);
+  // We only show children (auth form) after animation to top-left completes
+  const readyForChildren = phase === "docked" || phase === "complete";
 
-  // Helpers for styles per phase
-  const getBrandClass = () => {
-    // Tailwind classes + inline style for advanced transitions (see extra style below)
-    switch (phase) {
-      case "bloom":
-        return "splash-brand-bloom";
-      case "slide":
-        return "splash-brand-slide";
-      case "fixed":
-        return "splash-brand-fixed";
-      default:
-        return "";
-    }
+  // Animation class for the logo per phase
+  let logoAnimClass = "";
+  if (phase === "bloom") {
+    logoAnimClass = "splash-bloom-in";
+  } else if (phase === "shrink-slide") {
+    logoAnimClass = "splash-shrink-slide";
+  } else if (phase === "docked" || phase === "complete") {
+    logoAnimClass = "splash-docked";
+  }
+
+  // Logo positioning (center vs top left); top left in 'docked' or after shrink-slide complete
+  const logoPos = phase === "docked" || phase === "complete"
+    ? "fixed top-4 left-6 sm:top-4 sm:left-10 z-30"
+    : "absolute inset-0 flex items-center justify-center z-30";
+
+  // Logo size (text)
+  const logoTextSize = phase === "docked" || phase === "complete"
+    ? "text-3xl sm:text-4xl"
+    : "text-5xl sm:text-6xl";
+
+  // Logo extra color/decoration styles
+  const logoTextStyle = {
+    color: "#e087fb",
+    letterSpacing: (phase === "docked" || phase === "complete") ? "0.17em" : "0.23em",
+    fontFamily: "'Times New Roman', Times, serif",
+    fontWeight: 900,
+    textShadow: phase === "bloom"
+      ? "0 2px 18px #e087fb55"
+      : "0 1.5px 7px #20114040",
+    filter: phase === "bloom"
+      ? "blur(0.5px) drop-shadow(0 7px 32px #d87ffb77)"
+      : undefined,
+    transition: "all 0.62s cubic-bezier(.7,0,.23,1)",
+    cursor: "default"
   };
 
-  // For accessibility: don't allow tab focus under overlay
+  // Splash background stays until all transitions complete
   return (
     <div
-      className="fixed inset-0 z-[110] flex flex-col items-center justify-center bg-gradient-to-br from-black via-[#1E1833] to-[#2a1534] transition-all duration-500"
-      aria-hidden={!showAuth}
-      tabIndex={-1}
+      className={
+        "fixed inset-0 z-[150] flex flex-col items-center justify-center bg-gradient-to-tr from-[#1D1532] via-black to-[#2a1534] " +
+        "transition-opacity duration-500"
+      }
       style={{
         minHeight: "100vh",
-        pointerEvents: showAuth ? "none" : "auto",
-        opacity: 1,
+        width: "100vw",
+        pointerEvents: readyForChildren ? "none" : "auto"
       }}
+      aria-hidden={readyForChildren}
     >
-      {/* Animated Brand */}
+      {/* Animated Logo */}
       <div
-        className={
-          "absolute" +
-          (phase === "fixed"
-            ? " top-[16px] left-[32px] md:top-[16px] md:left-[32px] z-[112]" // header pos
-            : " top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[130]")
-        }
+        className={logoPos}
         style={{
-          width: phase === "fixed" ? 170 : 270,
-          height: phase === "fixed" ? 60 : 130,
-          pointerEvents: "none",
-          transition:
-            "all 0.79s cubic-bezier(0.86,0,.21,1) 0s, color 0.25s, background 0.18s",
+          minHeight: "88px",
+          minWidth: "240px",
+          maxWidth: "98vw",
+          pointerEvents: "none"
         }}
       >
         <span
           className={
-            "block font-extrabold select-none text-white tracking-widest border-0 rounded-xl shadow-xl px-0 md:px-2 whitespace-nowrap overflow-visible " +
-            getBrandClass()
+            "block px-2 rounded-xl whitespace-nowrap select-none " +
+            logoTextSize +
+            " " +
+            logoAnimClass
           }
-          style={{
-            fontSize: phase === "fixed" ? "2.15rem" : "3.25rem",
-            letterSpacing: phase === "fixed" ? "2.6px" : "4.0px",
-            color: "#e087fb",
-            filter:
-              phase === "bloom"
-                ? "blur(0.5px) drop-shadow(0 12px 48px #d87ffb66)"
-                : "none",
-            transition:
-              "all 0.8s cubic-bezier(0.82,0,.35,1), color 0.24s, filter 0.28s",
-            textShadow:
-              phase === "bloom"
-                ? "0 2.5px 24px #d87ffb55"
-                : "0 1.5px 6px #23184f41",
-            backgroundImage:
-              phase === "fixed"
-                ? "none"
-                : "linear-gradient(80deg,#fff6,#ce62e2 80%, transparent 100%)",
-            backgroundClip: phase === "fixed" ? "unset" : "text",
-          }}
+          style={logoTextStyle}
+          aria-label="My AuraGram"
         >
-          MY AURAGRAM
+          My AuraGram
         </span>
       </div>
-
-      {/* Overlay, show nothing else until done; optionally fade color bg */}
-      {/* When ready to show Auth, fade in children (login/signup UI) */}
+      {/* When ready, fade in children (auth form) centered */}
       <div
         className={
-          "transition-opacity transition-transform duration-700 w-full flex justify-center items-center absolute inset-0 z-[90] pointer-events-none " +
-          (showAuth && phase === "fixed"
-            ? "opacity-100 scale-100"
-            : "opacity-0 scale-95")
+          "absolute inset-0 flex items-center justify-center z-10 transition-opacity duration-700 " +
+          (readyForChildren ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none")
         }
         style={{
-          pointerEvents: showAuth && phase === "fixed" ? "auto" : "none",
-          background: "transparent",
+          transitionDelay: readyForChildren ? "120ms" : "0ms"
         }}
       >
-        {showAuth && phase === "fixed" && (
-          // Render children as AuthView (parent controls what's rendered)
-          <div className="splash-auth-children w-full h-full flex items-center justify-center animate-splashFadeIn">
-            {/* Children (login/signup UI) go here (App.js) */}
-            {typeof onComplete === "function" ? (
-              // Optionally: on child completion, can call onComplete() (Not used here)
-              // Just render nothing - parent controls when SplashScreen disappears
-              null
-            ) : null}
-          </div>
-        )}
+        {readyForChildren ? children : null}
       </div>
-      {/* Extra animation keyframes/styles */}
+      {/* Custom keyframes for blooming and slide effects */}
       <style>{`
-        .splash-brand-bloom {
-          animation: splashBloomIn 1.15s cubic-bezier(0.67,0,.36,1) 0s both;
+        .splash-bloom-in {
+          animation: myaurabloom-in 0.95s cubic-bezier(.49,0,.27,1) 0s both;
         }
-        .splash-brand-slide {
-          animation: splashSlideToCorner 0.82s cubic-bezier(0.82,0,.35,1) 0s both;
+        .splash-shrink-slide {
+          animation: myaurabloom-shrinkslide 0.92s cubic-bezier(.75,0,.27,1) 0s both;
         }
-        .splash-brand-fixed {
-          /* No animation, top-left via position above */
+        .splash-docked {
+          /* At top left: no further animation, but scale and position are now 'final' */
         }
-        @keyframes splashBloomIn {
-          0% { opacity: 0; transform: scale(0.71) rotate(-6deg); filter: blur(17px);}
-          70% { opacity: 1; transform: scale(1.12) rotate(-3deg); filter: blur(0);}
-          100% { opacity: 1; transform: scale(1) rotate(0deg); filter: blur(0);}
-        }
-        @keyframes splashSlideToCorner {
+        @keyframes myaurabloom-in {
           0% {
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 1;
-            filter: blur(0);
+            opacity: 0.2;
+            transform: scale(0.45) rotate(-7deg);
+            filter: blur(18px);
           }
-          75% {
-            transform: translate(-56%, -71%) scale(0.56);
+          77% {
+            opacity: 1; 
+            transform: scale(1.15) rotate(-2deg);
+            filter: blur(0px);
+          }
+          98% {
+            opacity: 1; 
+            transform: scale(0.99) rotate(0deg);
+            filter: blur(0.0px);
+          }
+          100% {
+            opacity: 1;
+            transform: none;
+            filter: none;
+          }
+        }
+        @keyframes myaurabloom-shrinkslide {
+          0% {
+            /* Start from center, scale 1 */
+            transform: scale(1) translate(0px,0px);
+            opacity: 1;
+          }
+          64% {
+            transform: scale(0.65) translate(-23vw, -14vw);
             opacity: 1;
           }
           100% {
-            transform: translate(0, 0) scale(0.58);
-            top: 16px; left: 32px;
+            /* Final: scale matches docked in top left */
+            transform: scale(0.61) translate(-38vw, -32vh);
             opacity: 1;
-            filter: blur(0);
           }
         }
-        .animate-splashFadeIn {
-          animation: splashFadeIn 0.8s cubic-bezier(.45,0,.49,1) 0.18s both;
-        }
-        @keyframes splashFadeIn {
-          from { opacity: 0; transform: scale(1.14) translateY(32px);}
-          to { opacity: 1; transform: none;}
+        @media (min-width: 600px) {
+          @keyframes myaurabloom-shrinkslide {
+            0% { transform: scale(1) translate(0px,0px);}
+            70% { transform: scale(0.64) translate(-11vw, -7vw);}
+            100% { transform: scale(0.58) translate(-20vw, -14vh);}
+          }
         }
       `}</style>
     </div>
