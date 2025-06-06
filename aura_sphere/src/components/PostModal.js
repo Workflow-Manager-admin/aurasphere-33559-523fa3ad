@@ -57,7 +57,7 @@ function PostModal({ post, onClose }) {
             <p className="text-base text-gray-700 font-normal break-words leading-relaxed">
               {post.caption}
             </p>
-            <div className="text-xs text-sky-500 font-bold mt-2">
+            <div className="text-xs text-black font-bold mt-2">
               #{post.category?.toLowerCase()}
             </div>
           </div>

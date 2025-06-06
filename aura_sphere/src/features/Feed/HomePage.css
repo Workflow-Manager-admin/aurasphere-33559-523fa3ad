@@ -374,7 +374,7 @@ body.theme-light {
 }
 .aura-spinner > div {
   width: 10px; height: 10px;
-  background: var(--aura-gradient-blue);
+  background: #000000;
   border-radius: 50%;
   animation: aura-bounce 0.98s infinite alternate;
 }
