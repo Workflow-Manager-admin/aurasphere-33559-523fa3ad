@@ -19,6 +19,10 @@ function Sidebar() {
 
   return (
     <aside className="sidebar">
+      {/* Brand at top - MY AURAGRAM */}
+      <div className="sidebar-brand" tabIndex={0}>
+        MY AURAGRAM
+      </div>
       <div className="sidebar-links">
         {SIDEBAR_LINKS.map(({ to, label, emoji }) => (
           <Link
