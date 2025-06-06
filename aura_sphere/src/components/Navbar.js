@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 const NAV_LINKS = [
   { to: '/feed', label: 'Home' },
   { to: '/explore', label: 'Explore' },
-  // { to: '/stories', label: 'Stories' }, // Removed Stories as navigation option
+  // Stories REMOVED as navigation option
   { to: '/messaging', label: 'Messages' },
   { to: '/media-upload', label: 'Upload' },
   { to: '/notifications', label: 'Notifications' },
