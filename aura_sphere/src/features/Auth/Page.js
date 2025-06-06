@@ -260,6 +260,7 @@ function AuthPage() {
               Don&#39;t have an account?{" "}
               <button
                 onClick={() => { setMode("signup"); setErr(""); }}
+                aria-label="Switch to Sign Up"
                 style={{
                   textDecoration: "underline",
                   color: "#e087fb",
@@ -268,13 +269,16 @@ function AuthPage() {
                   border: "none",
                   fontWeight: 700,
                   fontSize: "1rem"
-                }}>Sign up</button>
+                }}
+                // Remove all onHover etc. completely, no hover effect
+              >Sign up</button>
             </span>
           ) : (
             <span>
               Already joined?{" "}
               <button
                 onClick={() => { setMode("login"); setErr(""); }}
+                aria-label="Switch to Sign In"
                 style={{
                   textDecoration: "underline",
                   color: "#d5b3fc",
@@ -283,7 +287,8 @@ function AuthPage() {
                   border: "none",
                   fontWeight: 700,
                   fontSize: "1rem"
-                }}>Sign in</button>
+                }}
+              >Sign in</button>
             </span>
           )}
         </div>
