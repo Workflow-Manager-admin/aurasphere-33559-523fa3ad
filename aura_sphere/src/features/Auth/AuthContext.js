@@ -1,9 +1,16 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { auth } from "../../firebase"; // firebase.js exports "auth" (getAuth(app))
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+} from "firebase/auth";
 
-// PUBLIC_INTERFACE
 /**
- * AuthContext provides authentication state and functions for sign in/up using email & password.
+ * AuthContext provides authentication state and functions using Firebase Auth (real backend).
  */
+// PUBLIC_INTERFACE
 export const AuthContext = createContext({
   isAuthenticated: false,
   user: null,
@@ -22,82 +29,86 @@ export function useAuth() {
 
 // PUBLIC_INTERFACE
 /**
- * AuthProvider implements local-only email/password authentication and session for demo/dev purposes.
- * In production, real backend/Firebase integration should replace this.
+ * AuthProvider uses Firebase Auth for secure email/password authentication.
+ * Tracks real auth state and exposes login/signup/logout methods.
  */
 export function AuthProvider({ children }) {
-  // Persist session in localStorage (dev only: does not validate password securely!)
-  const [user, setUser] = useState(() => {
-    const u = localStorage.getItem("aura_auth_user");
-    return u ? JSON.parse(u) : null;
-  });
-  const [isAuthenticated, setIsAuthenticated] = useState(!!user);
+  // Session state is tracked by Firebase; keep local user state in sync
+  const [user, setUser] = useState(() => auth.currentUser ? mapFirebaseUser(auth.currentUser) : null);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => !!auth.currentUser);
+  const [loading, setLoading] = useState(true);
 
-  // For security demo, all users and passwords stored in plaintext in localStorage (not for production!)
-  const getUsers = useCallback(() => {
-    const users = localStorage.getItem("aura_auth_users");
-    return users ? JSON.parse(users) : {};
-  }, []);
-  const setUsers = useCallback((users) => {
-    localStorage.setItem("aura_auth_users", JSON.stringify(users));
-  }, []);
-
-  // PUBLIC_INTERFACE
-  const login = async (email, password) => {
-    // Simulate async call
-    await new Promise((r) => setTimeout(r, 400));
-    const users = getUsers();
-    if (users[email] && users[email].password === password) {
-      const u = { email, createdAt: users[email].createdAt };
-      setUser(u);
-      setIsAuthenticated(true);
-      localStorage.setItem("aura_auth_user", JSON.stringify(u));
-      return { ok: true };
-    }
-    return { ok: false, error: "Invalid email or password" };
-  };
-
-  // PUBLIC_INTERFACE
-  const signup = async (email, password) => {
-    await new Promise((r) => setTimeout(r, 500));
-    const users = getUsers();
-    if (users[email]) {
-      return { ok: false, error: "Email already registered" };
-    }
-    users[email] = {
-      password,
-      createdAt: Date.now(),
-    };
-    setUsers(users);
-    // Log in user after signup.
-    const u = { email, createdAt: Date.now() };
-    setUser(u);
-    setIsAuthenticated(true);
-    localStorage.setItem("aura_auth_user", JSON.stringify(u));
-    return { ok: true };
-  };
-
-  // PUBLIC_INTERFACE
-  const logout = () => {
-    setUser(null);
-    setIsAuthenticated(false);
-    localStorage.removeItem("aura_auth_user");
-  };
-
-  // Keep authenticated state in sync with localStorage/session
+  // Auth state listener: track auth changes (login/logout)
   useEffect(() => {
-    if (!user) {
-      setIsAuthenticated(false);
-      localStorage.removeItem("aura_auth_user");
-    } else {
-      setIsAuthenticated(true);
-      localStorage.setItem("aura_auth_user", JSON.stringify(user));
+    setLoading(true);
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        setUser(mapFirebaseUser(firebaseUser));
+        setIsAuthenticated(true);
+      } else {
+        setUser(null);
+        setIsAuthenticated(false);
+      }
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  /**
+   * LOGIN
+   * @param {string} email
+   * @param {string} password
+   * @returns {Promise<{ok: boolean, error?: string}>}
+   */
+  // PUBLIC_INTERFACE
+  const login = useCallback(async (email, password) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      // Auth state will update via listener
+      return { ok: true };
+    } catch (err) {
+      // Firebase error codes: https://firebase.google.com/docs/reference/js/auth#autherrorcodes
+      let msg = "Login failed. Please try again.";
+      if (err.code === "auth/invalid-email") msg = "Invalid email address.";
+      else if (err.code === "auth/user-disabled") msg = "Account is disabled.";
+      else if (err.code === "auth/user-not-found") msg = "No user with that email.";
+      else if (err.code === "auth/wrong-password") msg = "Wrong password.";
+      return { ok: false, error: msg };
     }
-  }, [user]);
+  }, []);
+
+  /**
+   * SIGNUP
+   * @param {string} email
+   * @param {string} password
+   * @returns {Promise<{ok: boolean, error?: string}>}
+   */
+  // PUBLIC_INTERFACE
+  const signup = useCallback(async (email, password) => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      // Auth state will update via listener
+      return { ok: true };
+    } catch (err) {
+      let msg = "Signup failed. Please try again.";
+      if (err.code === "auth/email-already-in-use") msg = "Email is already registered.";
+      else if (err.code === "auth/invalid-email") msg = "Invalid email address.";
+      else if (err.code === "auth/operation-not-allowed") msg = "Email-based sign-up is disabled.";
+      else if (err.code === "auth/weak-password") msg = "Password is too weak (min 6 chars).";
+      return { ok: false, error: msg };
+    }
+  }, []);
+
+  // PUBLIC_INTERFACE
+  const logout = useCallback(() => {
+    signOut(auth);
+    // Auth state will update via onAuthStateChanged
+  }, []);
 
   const value = {
     isAuthenticated,
     user,
+    loading,
     login,
     signup,
     logout,
@@ -105,7 +116,26 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider value={value}>
-      {children}
+      {/* Optionally show a loading spinner while establishing auth state */}
+      {loading ? null : children}
     </AuthContext.Provider>
   );
+}
+
+/**
+ * Helper: Map Firebase Auth User object to lightweight user for app context
+ */
+function mapFirebaseUser(firebaseUser) {
+  if (!firebaseUser) return null;
+  return {
+    uid: firebaseUser.uid,
+    email: firebaseUser.email,
+    emailVerified: firebaseUser.emailVerified,
+    displayName: firebaseUser.displayName,
+    photoURL: firebaseUser.photoURL,
+    providerId: firebaseUser.providerId,
+    // You can add more fields if needed (phoneNumber, etc.)
+    creationTime: firebaseUser.metadata?.creationTime,
+    lastSignInTime: firebaseUser.metadata?.lastSignInTime,
+  };
 }
