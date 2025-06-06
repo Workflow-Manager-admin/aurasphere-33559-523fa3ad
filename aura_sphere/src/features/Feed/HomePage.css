@@ -332,7 +332,7 @@ body.theme-light {
   font-size: 0.98em;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
-  box-shadow: 0 1.4px 8px #daf1ff18;
+  box-shadow: 0 1.4px 8px #d0d0d012;
 }
 .rec-user-follow:hover {
   filter: brightness(1.16);
@@ -354,7 +354,7 @@ body.theme-light {
 .aura-gradient-btn {
   background: var(--aura-main-gradient);
   color: #fff; border: none;
-  box-shadow: 0 1.3px 13px #daf1ff12;
+  box-shadow: 0 1.3px 13px #22222222;
   border-radius: 12px;
   font-weight: 600;
   padding: 7px 15px;
