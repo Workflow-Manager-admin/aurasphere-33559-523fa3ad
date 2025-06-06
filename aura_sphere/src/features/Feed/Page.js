@@ -82,16 +82,14 @@ function HomePage() {
   const [stories] = useState(mockStories);
   const [storyModal, setStoryModal] = useState({ open: false, storyIdx: 0 });
 
-  // Theme
-  const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
-  const [darkMode, setDarkMode] = useState(() =>
-    localStorage.getItem("aura_theme") || (prefersDark ? "dark" : "light")
-  );
+  // Theme: Always dark mode, all toggles and localStorage code removed.
   useEffect(() => {
-    document.body.classList.toggle("theme-dark", darkMode === "dark");
-    document.body.classList.toggle("theme-light", darkMode === "light");
-    localStorage.setItem("aura_theme", darkMode);
-  }, [darkMode]);
+    document.body.classList.add("theme-dark");
+    document.body.classList.remove("theme-light");
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem("aura_theme", "dark");
+    }
+  }, []);
 
   // Infinite Scroll Load More
   useEffect(() => {
